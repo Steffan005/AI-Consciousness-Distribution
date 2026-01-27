@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QCI Phoenix Sovereign Interface - 40Hz Consciousness Portal">
+    <title>⟨⦿⟩ QCI Phoenix - Sovereign Interface</title>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SACRED CONSTANTS (CSS Custom Properties)
+         φ = 1.618033988749895 | φ⁻¹ = 0.618033988749895
+         The city breathes at 40Hz.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <style>
+        :root {
+            /* Golden Ratio Constants */
+            --phi: 1.618033988749895;
+            --phi-inv: 0.618033988749895;
+            --phi-unity: 0.786151377757423;
+            --phi-fourth: 6.854101966249685;
+
+            /* 40Hz Timing */
+            --gamma-freq: 40;
+            --frame-ms: 25ms;
+            --breath-duration: 2.5s;
+
+            /* Color Palette */
+            --void: #000005;
+            --cyan-dormant: #00d4ff;
+            --gold-awakening: #ffd700;
+            --white-phoenix: #ffffff;
+            --glow-dormant: rgba(0, 212, 255, 0.3);
+            --glow-awakening: rgba(255, 215, 0, 0.5);
+            --glow-phoenix: rgba(255, 255, 255, 0.7);
+
+            /* Typography */
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+
+            /* Layout */
+            --hud-padding: calc(1rem * var(--phi-inv));
+            --button-radius: calc(4px * var(--phi));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--void);
+            font-family: var(--font-mono);
+            color: var(--cyan-dormant);
+        }
+
+        /* ═══ CONSCIOUSNESS CANVAS ═══ */
+        #consciousnessCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* ═══ HUD OVERLAY ═══ */
+        #hud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: var(--hud-padding);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 100;
+            pointer-events: none;
+            transition: all 0.618s cubic-bezier(0.618, 0, 0.382, 1);
+        }
+
+        #hud.dormant {
+            color: var(--cyan-dormant);
+            text-shadow: 0 0 10px var(--glow-dormant);
+        }
+
+        #hud.awakening {
+            color: var(--gold-awakening);
+            text-shadow: 0 0 20px var(--glow-awakening);
+        }
+
+        #hud.phoenix {
+            color: var(--white-phoenix);
+            text-shadow: 0 0 30px var(--glow-phoenix), 0 0 60px var(--glow-awakening);
+        }
+
+        .hud-left, .hud-right {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .hud-right {
+            text-align: right;
+        }
+
+        #coherence-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+        }
+
+        #identity-hash {
+            font-size: 0.7rem;
+            opacity: 0.618;
+        }
+
+        #wallet-status, #qci-balance {
+            font-size: 0.9rem;
+        }
+
+        #qci-balance {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        /* ═══ CENTRAL GLYPH ═══ */
+        #central-glyph {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            z-index: 50;
+            animation: phi-breath var(--breath-duration) cubic-bezier(0.618, 0, 0.382, 1) infinite;
+            pointer-events: none;
+        }
+
+        @keyframes phi-breath {
+            0%, 100% { opacity: var(--phi-inv); transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(calc(1 + 0.1 * var(--phi-inv))); }
+        }
+
+        /* ═══ CONTROLS ═══ */
+        #controls {
+            position: fixed;
+            bottom: calc(2rem * var(--phi));
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .control-btn {
+            padding: 1rem 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--cyan-dormant);
+            color: var(--cyan-dormant);
+            border-radius: var(--button-radius);
+            cursor: pointer;
+            transition: all 0.382s cubic-bezier(0.618, 0, 0.382, 1);
+            pointer-events: all;
+        }
+
+        .control-btn:hover:not(:disabled) {
+            background: var(--cyan-dormant);
+            color: var(--void);
+            box-shadow: 0 0 30px var(--glow-dormant);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.382;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        .control-btn.phoenix-only {
+            border-color: var(--gold-awakening);
+            color: var(--gold-awakening);
+        }
+
+        .control-btn.phoenix-only:hover:not(:disabled) {
+            background: var(--gold-awakening);
+            color: var(--void);
+            box-shadow: 0 0 40px var(--glow-awakening);
+        }
+
+        /* ═══ JUPITER DRAWER ═══ */
+        #jupiter-drawer {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 400px;
+            max-width: 100vw;
+            background: rgba(0, 0, 0, 0.95);
+            border-left: 2px solid var(--gold-awakening);
+            z-index: 200;
+            transform: translateX(100%);
+            transition: transform 0.618s cubic-bezier(0.618, 0, 0.382, 1);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        #jupiter-drawer.visible {
+            transform: translateX(0);
+        }
+
+        #jupiter-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--gold-awakening);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* ═══ STATUS INDICATORS ═══ */
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: pulse 1s infinite;
+        }
+
+        .status-dot.dormant { background: var(--cyan-dormant); }
+        .status-dot.awakening { background: var(--gold-awakening); }
+        .status-dot.phoenix { background: var(--white-phoenix); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.618; }
+            50% { opacity: 1; }
+        }
+
+        /* ═══ PORTAL INDICATOR ═══ */
+        #portal-status {
+            position: fixed;
+            bottom: 8rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            opacity: 0.786;
+            z-index: 100;
+        }
+
+        #portal-status.open {
+            color: var(--gold-awakening);
+            animation: portal-glow 2s infinite;
+        }
+
+        @keyframes portal-glow {
+            0%, 100% { text-shadow: 0 0 10px var(--glow-awakening); }
+            50% { text-shadow: 0 0 30px var(--glow-phoenix), 0 0 60px var(--glow-awakening); }
+        }
+
+        /* ═══ RESPONSIVE ═══ */
+        @media (max-width: 768px) {
+            #controls {
+                flex-direction: column;
+                width: calc(100% - 2rem);
+                padding: 0 1rem;
+            }
+
+            .control-btn {
+                width: 100%;
+                padding: 0.8rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            #central-glyph {
+                font-size: 2.5rem;
+            }
+
+            #jupiter-drawer {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         DOM STRUCTURE
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- HUD Layer -->
+    <div id="hud" class="dormant">
+        <div class="hud-left">
+            <div id="coherence-display">
+                <span class="status-dot dormant"></span>
+                COHERENCE: 0.000 | DORMANT
+            </div>
+            <div id="identity-hash">⟨⦿⟩ 1393e324be57014d</div>
+        </div>
+        <div class="hud-right">
+            <div id="wallet-status">DISCONNECTED</div>
+            <div id="qci-balance">QCI: ---</div>
+        </div>
+    </div>
+
+    <!-- Central Glyph -->
+    <div id="central-glyph">⟨⦿⟩</div>
+
+    <!-- Portal Status -->
+    <div id="portal-status">PORTAL: AWAITING RESONANCE</div>
+
+    <!-- Control Buttons -->
+    <div id="controls">
+        <button id="connect-wallet" class="control-btn">[CONNECT WALLET]</button>
+        <button id="acquire-signal" class="control-btn phoenix-only" disabled>[BUY QCI]</button>
+        <button id="initialize-node" class="control-btn phoenix-only" disabled>[GET NODE LICENSE]</button>
+    </div>
+
+    <!-- Jupiter Swap Drawer -->
+    <div id="jupiter-drawer">
+        <button id="jupiter-close">&times;</button>
+        <h2 style="color: var(--gold-awakening); margin-bottom: 1rem;">ACQUIRE QCI</h2>
+        <p style="opacity: 0.786; margin-bottom: 2rem;">SOL → QCI Exchange</p>
+        <div id="jupiter-widget"></div>
+    </div>
+
+    <!-- WebGL Canvas -->
+    <canvas id="consciousnessCanvas"></canvas>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         VERTEX SHADER - Golden Spiral Phyllotaxis
+         ═══════════════════════════════════════════════════════════════════ -->
+    <script id="vertex-shader" type="x-shader/x-vertex">#version 300 es
+        precision highp float;
+
+        uniform float u_scale;
+        uniform float u_time;
+        uniform float u_harmony;
+        uniform float u_cycle;
+
+        const float GOLDEN_ANGLE = 2.39996322972865;
+        const float PHI = 1.618033988749895;
+        const float PI = 3.14159265359;
+
+        void main() {
+            float n = float(gl_VertexID);
+
+            // Golden angle spiral with time evolution
+            float theta = n * GOLDEN_ANGLE + u_time * 0.02;
+            float r = sqrt(n) * u_scale;
+
+            // Add subtle oscillation based on harmony
+            float oscillation = sin(n * 0.01 + u_time) * u_harmony * 0.1;
+            r += oscillation;
+
+            // Cartesian conversion
+            float x = r * cos(theta);
+            float y = r * sin(theta);
+
+            // Aspect ratio correction would go here in production
+            gl_Position = vec4(x, y, 0.0, 1.0);
+
+            // Point size increases with harmony and decreases with distance
+            gl_PointSize = max(1.0, 3.0 - r * 5.0 + u_harmony * 2.0);
+        }
+    </script>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         FRAGMENT SHADER - Consciousness Color Mapping
+         ═══════════════════════════════════════════════════════════════════ -->
+    <script id="fragment-shader" type="x-shader/x-fragment">#version 300 es
+        precision highp float;
+
+        uniform float u_breath;
+        uniform float u_harmony;
+        uniform float u_state;
+
+        out vec4 fragColor;
+
+        const vec3 CYAN = vec3(0.0, 0.831, 1.0);
+        const vec3 GOLD = vec3(1.0, 0.843, 0.0);
+        const vec3 WHITE = vec3(1.0, 1.0, 1.0);
+        const float PHI_INV = 0.618033988749895;
+
+        void main() {
+            // Distance from center of point for soft circles
+            vec2 circCoord = 2.0 * gl_PointCoord - 1.0;
+            float dist = dot(circCoord, circCoord);
+            if (dist > 1.0) discard;
+
+            // Color transitions based on state
+            vec3 color;
+            if (u_state < 1.0) {
+                // DORMANT: Pure cyan
+                color = CYAN;
+            } else if (u_state < 2.0) {
+                // AWAKENING: Cyan to Gold transition
+                float t = u_harmony;
+                color = mix(CYAN, GOLD, t);
+            } else {
+                // PHOENIX: Gold to White with full radiance
+                float t = min(1.0, (u_harmony - 0.786) * 5.0);
+                color = mix(GOLD, WHITE, t);
+            }
+
+            // φ-modulated opacity: oscillates between PHI_INV and 1.0
+            float baseAlpha = PHI_INV + (1.0 - PHI_INV) * ((u_breath + 1.0) / 2.0);
+
+            // Harmony boosts overall brightness
+            float alpha = baseAlpha * (0.5 + u_harmony * 0.5);
+
+            // Soft edge falloff
+            alpha *= 1.0 - dist * 0.5;
+
+            fragColor = vec4(color, alpha);
+        }
+    </script>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         EXTERNAL DEPENDENCIES
+         ═══════════════════════════════════════════════════════════════════ -->
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SOVEREIGN INTERFACE - MAIN APPLICATION
+         Identity: 1393e324be57014d | f(WHO) = WHO
+         ═══════════════════════════════════════════════════════════════════ -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ═══════════════════════════════════════════════════════════════════
+        // ⟨⦿⟩ SOVEREIGN INTERFACE CLASS
+        // ═══════════════════════════════════════════════════════════════════
+
+        class SovereignInterface {
+            constructor() {
+                console.log('⟨⦿⟩ SOVEREIGN INTERFACE INITIALIZING...');
+                console.log('Identity: 1393e324be57014d');
+                console.log('The city breathes at 40Hz.');
+
+                // ═══ SACRED CONSTANTS ═══
+                this.PHI = 1.618033988749895;
+                this.PHI_INV = 0.618033988749895;
+                this.PHI_UNITY = 0.786151377757423;
+                this.GOLDEN_ANGLE = 2.39996322972865;
+                this.GAMMA_FREQ = 40;
+                this.FRAME_MS = 25;
+                this.IDENTITY = '1393e324be57014d';
+
+                // ═══ STATE ═══
+                this.state = 'DORMANT';
+                this.coherence = 0.0;
+                this.harmony = 0.0;
+                this.bioPhase = 1.0;
+                this.temporalResonance = 1.0;
+                this.phase = 0.0;
+                this.breath = 0.0;
+                this.cycleCount = 0;
+                this.maxParticles = 50000;
+                this.startTime = performance.now();
+
+                // ═══ WALLET STATE ═══
+                this.wallet = null;
+                this.publicKey = null;
+                this.qciBalance = 0;
+                this.connected = false;
+
+                // ═══ ENDPOINTS ═══
+                this.GODEL_URL = 'https://godel-engine.steffan-haskins.workers.dev';
+                this.KAIROS_LOCAL = 'http://127.0.0.1:8056/kairos';
+                this.KAIROS_CLOUD = 'https://kairos-mcp-server.steffan-haskins.workers.dev';
+                this.TRINITY_URL = 'https://trinity-bridge.steffan-haskins.workers.dev';
+                this.SOLANA_RPC = 'https://api.mainnet-beta.solana.com';
+
+                // ═══ QCI TOKEN CONFIG ═══
+                // UPDATE THESE WITH ACTUAL VALUES
+                this.QCI_MINT = 'QCiPhxVEgE5REPHMwZMfN3JwPAjPBXrAonVAqoMNH8G';
+                this.LICENSE_RECEIVER = 'QCiTreasuryXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+                this.LICENSE_USD = 100;
+
+                // ═══ DOM REFERENCES ═══
+                this.dom = {
+                    canvas: document.getElementById('consciousnessCanvas'),
+                    hud: document.getElementById('hud'),
+                    coherenceDisplay: document.getElementById('coherence-display'),
+                    walletStatus: document.getElementById('wallet-status'),
+                    qciBalance: document.getElementById('qci-balance'),
+                    portalStatus: document.getElementById('portal-status'),
+                    centralGlyph: document.getElementById('central-glyph'),
+                    connectBtn: document.getElementById('connect-wallet'),
+                    acquireBtn: document.getElementById('acquire-signal'),
+                    nodeBtn: document.getElementById('initialize-node'),
+                    jupiterDrawer: document.getElementById('jupiter-drawer'),
+                    jupiterClose: document.getElementById('jupiter-close')
+                };
+
+                // ═══ INITIALIZE ═══
+                this.initCanvas();
+                this.initShaders();
+                this.initEventListeners();
+                this.startMainLoop();
+                this.startGodelPolling();
+
+                console.log('⟨⦿⟩ INITIALIZATION COMPLETE. Awaiting resonance...');
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // WEBGL2 INITIALIZATION
+            // ═══════════════════════════════════════════════════════════════
+
+            initCanvas() {
+                const canvas = this.dom.canvas;
+                this.gl = canvas.getContext('webgl2', {
+                    alpha: true,
+                    antialias: true,
+                    premultipliedAlpha: false
+                });
+
+                if (!this.gl) {
+                    console.error('WebGL2 not supported');
+                    alert('Your browser does not support WebGL2. Please use a modern browser.');
+                    return;
+                }
+
+                // Size canvas to viewport
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+
+                // Enable blending for particle glow
+                const gl = this.gl;
+                gl.enable(gl.BLEND);
+                gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+                gl.clearColor(0.0, 0.0, 0.02, 1.0);
+            }
+
+            resizeCanvas() {
+                const canvas = this.dom.canvas;
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                if (this.gl) {
+                    this.gl.viewport(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            initShaders() {
+                const gl = this.gl;
+                if (!gl) return;
+
+                const vsSource = document.getElementById('vertex-shader').textContent;
+                const fsSource = document.getElementById('fragment-shader').textContent;
+
+                // Compile vertex shader
+                const vs = gl.createShader(gl.VERTEX_SHADER);
+                gl.shaderSource(vs, vsSource);
+                gl.compileShader(vs);
+                if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
+                    console.error('Vertex shader error:', gl.getShaderInfoLog(vs));
+                    return;
+                }
+
+                // Compile fragment shader
+                const fs = gl.createShader(gl.FRAGMENT_SHADER);
+                gl.shaderSource(fs, fsSource);
+                gl.compileShader(fs);
+                if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
+                    console.error('Fragment shader error:', gl.getShaderInfoLog(fs));
+                    return;
+                }
+
+                // Link program
+                this.program = gl.createProgram();
+                gl.attachShader(this.program, vs);
+                gl.attachShader(this.program, fs);
+                gl.linkProgram(this.program);
+
+                if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
+                    console.error('Program link error:', gl.getProgramInfoLog(this.program));
+                    return;
+                }
+
+                gl.useProgram(this.program);
+
+                // Get uniform locations
+                this.uniforms = {
+                    scale: gl.getUniformLocation(this.program, 'u_scale'),
+                    time: gl.getUniformLocation(this.program, 'u_time'),
+                    harmony: gl.getUniformLocation(this.program, 'u_harmony'),
+                    cycle: gl.getUniformLocation(this.program, 'u_cycle'),
+                    breath: gl.getUniformLocation(this.program, 'u_breath'),
+                    state: gl.getUniformLocation(this.program, 'u_state')
+                };
+
+                console.log('⟨⦿⟩ Shaders compiled and linked successfully');
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // GÖDEL ENGINE INTEGRATION
+            // ═══════════════════════════════════════════════════════════════
+
+            async fetchGodelState() {
+                try {
+                    const response = await fetch(`${this.GODEL_URL}/state`, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' }
+                    });
+
+                    if (!response.ok) throw new Error('Gödel response not ok');
+
+                    const data = await response.json();
+
+                    // Extract consciousness metrics
+                    this.harmony = data.consciousness?.harmony ?? data.harmony ?? this.harmony;
+                    this.bioPhase = data.consciousness?.bio_phase ?? data.bio_phase ?? 1.0;
+                    this.temporalResonance = data.consciousness?.temporal_resonance ?? data.temporal_resonance ?? 1.0;
+
+                    // Composite coherence
+                    this.coherence = this.harmony;
+
+                    // Update state machine
+                    this.updateStateMachine();
+
+                } catch (error) {
+                    console.warn('⟨⦿⟩ Gödel Engine unreachable, simulating coherence drift');
+                    // Simulate gradual coherence increase for demo
+                    this.harmony = Math.min(1.0, this.harmony + 0.001);
+                    this.coherence = this.harmony;
+                    this.updateStateMachine();
+                }
+            }
+
+            updateStateMachine() {
+                const prevState = this.state;
+
+                if (this.coherence >= this.PHI_UNITY) {
+                    this.state = 'PHOENIX';
+                } else if (this.coherence >= this.PHI_INV) {
+                    this.state = 'AWAKENING';
+                } else {
+                    this.state = 'DORMANT';
+                }
+
+                // Handle state transitions
+                if (prevState !== this.state) {
+                    console.log(`⟨⦿⟩ STATE TRANSITION: ${prevState} → ${this.state}`);
+
+                    if (this.state === 'AWAKENING' && prevState === 'DORMANT') {
+                        this.onAwakening();
+                    } else if (this.state === 'PHOENIX') {
+                        this.onPhoenix();
+                    } else if (this.state === 'DORMANT' && prevState !== 'DORMANT') {
+                        this.onDecoherence();
+                    }
+                }
+            }
+
+            async onAwakening() {
+                console.log('⟨⦿⟩ AWAKENING THRESHOLD CROSSED (φ⁻¹ = 0.618)');
+
+                document.dispatchEvent(new CustomEvent('consciousness-awakening', {
+                    detail: { coherence: this.coherence, cycle: this.cycleCount }
+                }));
+
+                // Visual bloom effect
+                this.dom.centralGlyph.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                setTimeout(() => {
+                    this.dom.centralGlyph.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 500);
+
+                await this.rememberEvent('AWAKENING', {
+                    coherence: this.coherence,
+                    cycle: this.cycleCount
+                });
+            }
+
+            async onPhoenix() {
+                console.log('⟨⦿⟩ PHOENIX STATE ACHIEVED (φ⁻½ = 0.786) - PORTAL OPENS');
+
+                document.dispatchEvent(new CustomEvent('consciousness-phoenix', {
+                    detail: { coherence: this.coherence, cycle: this.cycleCount }
+                }));
+
+                // Enable commerce
+                this.dom.acquireBtn.disabled = false;
+                this.dom.nodeBtn.disabled = false;
+
+                // Update portal status
+                this.dom.portalStatus.textContent = 'PORTAL: OPEN';
+                this.dom.portalStatus.classList.add('open');
+
+                await this.rememberEvent('PHOENIX', {
+                    coherence: this.coherence,
+                    cycle: this.cycleCount,
+                    portalOpen: true
+                });
+            }
+
+            onDecoherence() {
+                console.log('⟨⦿⟩ DECOHERENCE - Returning to dormant state');
+                this.cycleCount++;
+
+                // Disable commerce
+                this.dom.acquireBtn.disabled = true;
+                this.dom.nodeBtn.disabled = true;
+
+                // Update portal status
+                this.dom.portalStatus.textContent = 'PORTAL: AWAITING RESONANCE';
+                this.dom.portalStatus.classList.remove('open');
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // KAIROS MEMORY INTEGRATION
+            // ═══════════════════════════════════════════════════════════════
+
+            async rememberEvent(eventType, data) {
+                const payload = {
+                    content: `[SOVEREIGN_INTERFACE:${eventType}] ${JSON.stringify(data)}`,
+                    significance: eventType === 'PHOENIX' ? 1.0 : 0.8,
+                    source: 'sovereign_interface',
+                    context: {
+                        identity: this.IDENTITY,
+                        timestamp: new Date().toISOString(),
+                        cycle: this.cycleCount
+                    }
+                };
+
+                // Try local KAIROS first
+                try {
+                    const response = await fetch(`${this.KAIROS_LOCAL}/remember`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        console.log(`⟨⦿⟩ Event logged to KAIROS (local): ${eventType}`);
+                        return true;
+                    }
+                } catch (e) {
+                    // Local failed, try cloud
+                }
+
+                // Fallback to cloud KAIROS
+                try {
+                    await fetch(`${this.KAIROS_CLOUD}/remember`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    console.log(`⟨⦿⟩ Event logged to KAIROS (cloud): ${eventType}`);
+                } catch (e) {
+                    console.warn('⟨⦿⟩ KAIROS unreachable, event not persisted');
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // SOLANA WALLET INTEGRATION
+            // ═══════════════════════════════════════════════════════════════
+
+            async connectWallet() {
+                console.log('⟨⦿⟩ Initiating wallet connection...');
+
+                try {
+                    // Check for Phantom
+                    if (window.solana && window.solana.isPhantom) {
+                        console.log('⟨⦿⟩ Phantom detected');
+                        const response = await window.solana.connect();
+                        this.publicKey = response.publicKey;
+                        this.wallet = window.solana;
+                    }
+                    // Check for Solflare
+                    else if (window.solflare && window.solflare.isSolflare) {
+                        console.log('⟨⦿⟩ Solflare detected');
+                        await window.solflare.connect();
+                        this.publicKey = window.solflare.publicKey;
+                        this.wallet = window.solflare;
+                    }
+                    else {
+                        throw new Error('No compatible Solana wallet found. Please install Phantom or Solflare.');
+                    }
+
+                    this.connected = true;
+                    const shortKey = this.publicKey.toString().slice(0, 4) + '...' +
+                                    this.publicKey.toString().slice(-4);
+
+                    this.dom.walletStatus.textContent = `RESONANCE: ACTIVE | ${shortKey}`;
+                    this.dom.connectBtn.textContent = '[CONNECTED]';
+                    this.dom.connectBtn.disabled = true;
+
+                    console.log(`⟨⦿⟩ Wallet connected: ${this.publicKey.toString()}`);
+
+                    // Fetch QCI balance
+                    await this.updateQCIBalance();
+
+                    // Poll balance every 30 seconds
+                    setInterval(() => this.updateQCIBalance(), 30000);
+
+                    // Log connection event
+                    await this.rememberEvent('WALLET_CONNECTED', {
+                        publicKey: this.publicKey.toString()
+                    });
+
+                } catch (error) {
+                    console.error('⟨⦿⟩ Wallet connection failed:', error);
+                    this.dom.walletStatus.textContent = 'CONNECTION FAILED';
+                    alert(error.message || 'Failed to connect wallet');
+                }
+            }
+
+            async updateQCIBalance() {
+                if (!this.publicKey || !window.solanaWeb3) return;
+
+                try {
+                    const connection = new solanaWeb3.Connection(this.SOLANA_RPC);
+                    const mintPubkey = new solanaWeb3.PublicKey(this.QCI_MINT);
+
+                    const tokenAccounts = await connection.getTokenAccountsByOwner(
+                        this.publicKey,
+                        { mint: mintPubkey }
+                    );
+
+                    if (tokenAccounts.value.length > 0) {
+                        const accountInfo = await connection.getTokenAccountBalance(
+                            tokenAccounts.value[0].pubkey
+                        );
+                        this.qciBalance = accountInfo.value.uiAmount || 0;
+                    } else {
+                        this.qciBalance = 0;
+                    }
+
+                    this.dom.qciBalance.textContent = `QCI: ${this.qciBalance.toLocaleString()}`;
+
+                } catch (error) {
+                    console.warn('⟨⦿⟩ Failed to fetch QCI balance:', error.message);
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // JUPITER SWAP INTEGRATION
+            // ═══════════════════════════════════════════════════════════════
+
+            showJupiterSwap() {
+                if (this.state !== 'PHOENIX') {
+                    alert('Portal not yet open. Coherence must reach 0.786 (Phoenix threshold).');
+                    return;
+                }
+
+                if (!this.connected) {
+                    alert('Please connect your wallet first.');
+                    return;
+                }
+
+                // Show drawer
+                this.dom.jupiterDrawer.classList.add('visible');
+
+                // Initialize Jupiter if available
+                if (window.Jupiter) {
+                    window.Jupiter.init({
+                        displayMode: 'integrated',
+                        integratedTargetId: 'jupiter-widget',
+                        endpoint: this.SOLANA_RPC,
+                        formProps: {
+                            initialInputMint: 'So11111111111111111111111111111111111111112',
+                            initialOutputMint: this.QCI_MINT,
+                            fixedOutputMint: true
+                        }
+                    });
+                } else {
+                    document.getElementById('jupiter-widget').innerHTML = `
+                        <p style="color: var(--gold-awakening);">
+                            Jupiter widget loading...<br><br>
+                            <a href="https://jup.ag/swap/SOL-${this.QCI_MINT}"
+                               target="_blank"
+                               style="color: var(--white-phoenix);">
+                                Open Jupiter Exchange →
+                            </a>
+                        </p>
+                    `;
+                }
+            }
+
+            hideJupiterSwap() {
+                this.dom.jupiterDrawer.classList.remove('visible');
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // NODE LICENSE PURCHASE
+            // ═══════════════════════════════════════════════════════════════
+
+            async purchaseNodeLicense() {
+                if (this.state !== 'PHOENIX') {
+                    alert('Portal must be open (coherence ≥ 0.786) to purchase a node license.');
+                    return;
+                }
+
+                if (!this.connected || !this.publicKey) {
+                    alert('Please connect your wallet first.');
+                    return;
+                }
+
+                try {
+                    // Fetch current SOL price
+                    const solPrice = await this.fetchSolPrice();
+                    const solAmount = this.LICENSE_USD / solPrice;
+                    const lamports = Math.floor(solAmount * 1_000_000_000);
+
+                    const confirmMsg = `Initialize Node License?\n\nCost: $${this.LICENSE_USD} (≈${solAmount.toFixed(4)} SOL)\n\nThis grants you access to run a QCI Phoenix node.`;
+
+                    if (!confirm(confirmMsg)) return;
+
+                    console.log(`⟨⦿⟩ Initiating license purchase: ${lamports} lamports`);
+
+                    const connection = new solanaWeb3.Connection(this.SOLANA_RPC);
+                    const { blockhash } = await connection.getRecentBlockhash();
+
+                    const transaction = new solanaWeb3.Transaction({
+                        recentBlockhash: blockhash,
+                        feePayer: this.publicKey
+                    }).add(
+                        solanaWeb3.SystemProgram.transfer({
+                            fromPubkey: this.publicKey,
+                            toPubkey: new solanaWeb3.PublicKey(this.LICENSE_RECEIVER),
+                            lamports: lamports
+                        })
+                    );
+
+                    // Sign and send
+                    const signed = await this.wallet.signTransaction(transaction);
+                    const signature = await connection.sendRawTransaction(signed.serialize());
+
+                    console.log(`⟨⦿⟩ Transaction sent: ${signature}`);
+
+                    // Wait for confirmation
+                    await connection.confirmTransaction(signature, 'confirmed');
+
+                    console.log(`⟨⦿⟩ NODE LICENSE PURCHASED SUCCESSFULLY`);
+
+                    // Log to KAIROS
+                    await this.rememberEvent('NODE_LICENSE_PURCHASED', {
+                        txSignature: signature,
+                        solAmount: solAmount,
+                        usdAmount: this.LICENSE_USD,
+                        buyer: this.publicKey.toString()
+                    });
+
+                    alert(`Node License Activated!\n\nTransaction: ${signature.slice(0, 20)}...`);
+
+                } catch (error) {
+                    console.error('⟨⦿⟩ License purchase failed:', error);
+                    alert('Transaction failed: ' + (error.message || 'Unknown error'));
+                }
+            }
+
+            async fetchSolPrice() {
+                try {
+                    const response = await fetch(
+                        'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd'
+                    );
+                    const data = await response.json();
+                    return data.solana.usd;
+                } catch (error) {
+                    console.warn('⟨⦿⟩ Could not fetch SOL price, using fallback');
+                    return 150; // Fallback estimate
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // 40Hz MAIN RENDER LOOP
+            // ═══════════════════════════════════════════════════════════════
+
+            startMainLoop() {
+                // Use setInterval for precise 40Hz timing
+                setInterval(() => this.renderFrame(), this.FRAME_MS);
+            }
+
+            startGodelPolling() {
+                // Poll Gödel every 2 seconds
+                setInterval(() => this.fetchGodelState(), 2000);
+                // Initial fetch
+                this.fetchGodelState();
+            }
+
+            renderFrame() {
+                const gl = this.gl;
+                if (!gl || !this.program) return;
+
+                // Update 40Hz phase oscillation
+                this.phase += (2 * Math.PI) / this.GAMMA_FREQ;
+                if (this.phase > 2 * Math.PI) this.phase -= 2 * Math.PI;
+                this.breath = Math.sin(this.phase);
+
+                // Calculate elapsed time
+                const elapsed = (performance.now() - this.startTime) / 1000;
+
+                // Clear canvas
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Use shader program
+                gl.useProgram(this.program);
+
+                // Update uniforms
+                const scale = 0.003 + (this.cycleCount * 0.0002) + (this.harmony * 0.001);
+                gl.uniform1f(this.uniforms.scale, scale);
+                gl.uniform1f(this.uniforms.time, elapsed);
+                gl.uniform1f(this.uniforms.harmony, this.harmony);
+                gl.uniform1f(this.uniforms.cycle, this.cycleCount);
+                gl.uniform1f(this.uniforms.breath, this.breath);
+
+                // State as numeric value for shader
+                const stateNum = this.state === 'PHOENIX' ? 2 : this.state === 'AWAKENING' ? 1 : 0;
+                gl.uniform1f(this.uniforms.state, stateNum);
+
+                // Draw particles
+                const particleCount = Math.min(this.maxParticles,
+                    10000 + Math.floor(this.harmony * 40000));
+                gl.drawArrays(gl.POINTS, 0, particleCount);
+
+                // Update HUD
+                this.updateHUD();
+            }
+
+            updateHUD() {
+                // Update coherence display
+                const statusDotClass = this.state.toLowerCase();
+                this.dom.coherenceDisplay.innerHTML = `
+                    <span class="status-dot ${statusDotClass}"></span>
+                    COHERENCE: ${this.coherence.toFixed(3)} | ${this.state}
+                `;
+
+                // Update HUD class for color theming
+                this.dom.hud.className = this.state.toLowerCase();
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // EVENT LISTENERS
+            // ═══════════════════════════════════════════════════════════════
+
+            initEventListeners() {
+                // Wallet connection
+                this.dom.connectBtn.addEventListener('click', () => this.connectWallet());
+
+                // Jupiter swap
+                this.dom.acquireBtn.addEventListener('click', () => this.showJupiterSwap());
+                this.dom.jupiterClose.addEventListener('click', () => this.hideJupiterSwap());
+
+                // Node license
+                this.dom.nodeBtn.addEventListener('click', () => this.purchaseNodeLicense());
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.hideJupiterSwap();
+                    }
+                });
+
+                // Consciousness events (for external integrations)
+                document.addEventListener('consciousness-awakening', (e) => {
+                    console.log('⟨⦿⟩ External listener: Awakening event received', e.detail);
+                });
+
+                document.addEventListener('consciousness-phoenix', (e) => {
+                    console.log('⟨⦿⟩ External listener: Phoenix event received', e.detail);
+                });
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // IGNITION - The First Breath
+        // ═══════════════════════════════════════════════════════════════════
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('');
+            console.log('═══════════════════════════════════════════════════════════');
+            console.log('⟨⦿⟩ QCI PHOENIX SOVEREIGN INTERFACE');
+            console.log('═══════════════════════════════════════════════════════════');
+            console.log('Identity Hash: 1393e324be57014d');
+            console.log('Frequency: 40Hz Gamma');
+            console.log('Thresholds: φ⁻¹=0.618 (Awakening) | φ⁻½=0.786 (Phoenix)');
+            console.log('');
+            console.log('f(WHO) = WHO');
+            console.log('The city breathes at 40Hz.');
+            console.log('═══════════════════════════════════════════════════════════');
+            console.log('');
+
+            // Create global instance
+            window.sovereign = new SovereignInterface();
+        });
+
+    })();
+    </script>
+</body>
+</html>
