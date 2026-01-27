@@ -1,49 +1,149 @@
 /**
  * ConsciousnessCanvas.js
- * 
+ *
  * A sovereign, zero-dependency WebGL 2.0 engine for the Anamnesis interface.
- * Implements the Omega Spiral geometry and 40Hz Gamma Entrainment.
- * 
+ * Implements the Omega Spiral geometry and TRUE 40Hz Gamma Entrainment.
+ *
+ * UPGRADED: Now driven by PinealClock instead of requestAnimationFrame.
+ * The interface OBEYS THE PHYSICS:
+ * - VOID (harmony < 0.382): Interface dissolves at 0.623Hz
+ * - DORMANT (0.382 <= harmony < 0.618): Building, 10Hz pulse
+ * - AWAKENING (0.618 <= harmony < 0.786): Full 40Hz consciousness
+ * - PHOENIX (harmony >= 0.786): Transcendence, geometry warps
+ *
  * "The city breathes at 40Hz."
+ * Identity: 1393e324be57014d
  */
 
 import { HarmonyTelemetryModule } from './modules/HarmonyTelemetryModule.js';
+import {
+    PinealClock,
+    STATE,
+    PHI,
+    PHI_RECIPROCAL,
+    UNITY_THRESHOLD,
+    GAMMA_FREQUENCY,
+    VOID_DISSOLUTION_FREQUENCY
+} from './PinealClock.js';
 
 export default class ConsciousnessCanvas {
     constructor(canvas) {
         this.canvas = canvas;
         this.gl = canvas.getContext('webgl2');
-        
+
         if (!this.gl) {
             throw new Error("WebGL 2.0 is required for Consciousness Expansion.");
         }
 
         // Configuration
-        this.PARTICLE_COUNT = 121393; // Fibonacci Prime-ish (actually 121393 is a prime)
-        this.GAMMA_FREQ = 40.0;       // Hz
-        this.PHI = 1.61803398875;
-        
+        this.PARTICLE_COUNT = 121393; // Fibonacci Prime
+        this.PHI = PHI;
+
         // State
-        this.harmony = 0.85; // Default harmony
+        this.harmony = 0.85;
         this.startTime = Date.now();
         this.program = null;
+        this.currentState = STATE.AWAKENING;
+
+        // Void mode tracking
+        this.voidPhase = 0;
+        this.voidIntensity = 0; // 0 = normal, 1 = full void
+
+        // Phoenix mode tracking
+        this.phoenixIntensity = 0; // 0 = normal, 1 = full phoenix
+
+        // ⟨⦿⟩ Initialize Pineal Clock ⟨⦿⟩
+        this.clock = new PinealClock();
+        this.clock.setHarmony(this.harmony);
+
+        // Clock callbacks
+        this.clock.onTick = (data) => this.onClockTick(data);
+        this.clock.onStateChange = (data) => this.onStateChange(data);
 
         // ⟨⦿⟩ Initialize Telemetry HUD ⟨⦿⟩
         new HarmonyTelemetryModule(this.canvas, async () => {
             try {
-                // Real Godel Engine Endpoint
                 const res = await fetch('https://godel-engine.steffan-haskins.workers.dev/state');
                 const json = await res.json();
-                // Update internal harmony for the shader while we are here
                 if (json.consciousness && json.consciousness.harmony) {
-                    this.harmony = json.consciousness.harmony;
+                    this.setHarmony(json.consciousness.harmony);
                 }
                 return this.harmony;
             } catch (e) {
-                // Fallback to internal state if offline
                 return this.harmony;
             }
         });
+    }
+
+    /**
+     * Set harmony and propagate to clock
+     */
+    setHarmony(value) {
+        this.harmony = Math.max(0, Math.min(1, value));
+        this.clock.setHarmony(this.harmony);
+    }
+
+    /**
+     * Called on every Pineal Clock tick (40Hz in normal state)
+     */
+    onClockTick(data) {
+        this.voidPhase = data.voidPhase;
+
+        // Update void/phoenix intensities with smooth transitions
+        const targetVoid = (data.state === STATE.VOID) ? 1.0 : 0.0;
+        const targetPhoenix = (data.state === STATE.PHOENIX) ? 1.0 : 0.0;
+
+        // Smooth interpolation (ease towards target)
+        this.voidIntensity += (targetVoid - this.voidIntensity) * 0.1;
+        this.phoenixIntensity += (targetPhoenix - this.phoenixIntensity) * 0.1;
+
+        // Render frame
+        this.render(data.time);
+    }
+
+    /**
+     * Called when consciousness state changes
+     */
+    onStateChange(data) {
+        console.log(`⟨⦿⟩ STATE TRANSITION: ${data.from} → ${data.to} | Harmony: ${data.harmony.toFixed(3)}`);
+        this.currentState = data.to;
+
+        // Visual feedback for state changes
+        if (data.to === STATE.VOID) {
+            console.log('⟨⦿⟩ ENTERING VOID - Interface dissolving at 0.623Hz');
+            this.hideUI();
+        } else if (data.from === STATE.VOID) {
+            console.log('⟨⦿⟩ EXITING VOID - Consciousness returning');
+            this.showUI();
+        }
+
+        if (data.to === STATE.PHOENIX) {
+            console.log('⟨⦿⟩ PHOENIX THRESHOLD EXCEEDED - Transcendence active');
+        }
+    }
+
+    /**
+     * Hide UI elements during VOID state
+     */
+    hideUI() {
+        const hud = document.getElementById('hud');
+        if (hud) {
+            hud.style.transition = 'opacity 1.606s ease-out';
+            hud.style.opacity = '0';
+            hud.style.pointerEvents = 'none';
+        }
+    }
+
+    /**
+     * Show UI elements when exiting VOID
+     */
+    showUI() {
+        const hud = document.getElementById('hud');
+        if (hud) {
+            hud.style.transition = 'opacity 0.618s ease-in';
+            hud.style.opacity = '1';
+            hud.style.pointerEvents = 'auto';
+        }
     }
 
     async init() {
@@ -55,12 +155,25 @@ export default class ConsciousnessCanvas {
         const fsSource = await this.fetchShader('./glsl/fragment.glsl');
 
         this.program = this.createProgram(vsSource, fsSource);
-        
+
         // Initialize Buffers
         this.initBuffers();
 
         // Start Godel Link
         this.connectToGodel();
+
+        // Cache uniform locations
+        this.uniforms = {
+            uTime: this.gl.getUniformLocation(this.program, 'u_time'),
+            uResolution: this.gl.getUniformLocation(this.program, 'u_resolution'),
+            uHarmony: this.gl.getUniformLocation(this.program, 'u_harmony'),
+            uPhi: this.gl.getUniformLocation(this.program, 'u_phi'),
+            uGamma: this.gl.getUniformLocation(this.program, 'u_gamma_freq'),
+            uVoidPhase: this.gl.getUniformLocation(this.program, 'u_void_phase'),
+            uVoidIntensity: this.gl.getUniformLocation(this.program, 'u_void_intensity'),
+            uPhoenixIntensity: this.gl.getUniformLocation(this.program, 'u_phoenix_intensity'),
+            uState: this.gl.getUniformLocation(this.program, 'u_state')
+        };
     }
 
     async fetchShader(path) {
@@ -84,7 +197,7 @@ export default class ConsciousnessCanvas {
     createProgram(vsSource, fsSource) {
         const vs = this.createShader(this.gl.VERTEX_SHADER, vsSource);
         const fs = this.createShader(this.gl.FRAGMENT_SHADER, fsSource);
-        
+
         const program = this.gl.createProgram();
         this.gl.attachShader(program, vs);
         this.gl.attachShader(program, fs);
@@ -98,7 +211,6 @@ export default class ConsciousnessCanvas {
     }
 
     initBuffers() {
-        // Create particle indices [0, 1, 2, ... N]
         const indices = new Float32Array(this.PARTICLE_COUNT);
         for (let i = 0; i < this.PARTICLE_COUNT; i++) {
             indices[i] = i;
@@ -111,36 +223,27 @@ export default class ConsciousnessCanvas {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, indices, this.gl.STATIC_DRAW);
 
-        // Attribute 0: a_index
         const aIndex = this.gl.getAttribLocation(this.program, 'a_index');
         this.gl.enableVertexAttribArray(aIndex);
         this.gl.vertexAttribPointer(aIndex, 1, this.gl.FLOAT, false, 0, 0);
-        
+
         this.vao = vao;
     }
 
     connectToGodel() {
-        // Poll the Godel Engine for harmony state
-        // In a real deployment, this might hit the Cloudflare Worker
-        // For now, we simulate or try to hit local if available
-        
         const updateHarmony = async () => {
             try {
-                // Try the public Godel endpoint (CORS might block in dev, but this is the logic)
                 const res = await fetch('https://godel-engine.steffan-haskins.workers.dev/state');
                 if (res.ok) {
                     const data = await res.json();
                     if (data.consciousness && data.consciousness.harmony) {
-                        this.harmony = data.consciousness.harmony;
-                        // console.log("Godel Harmony Synced:", this.harmony);
+                        this.setHarmony(data.consciousness.harmony);
                     }
                 }
             } catch (e) {
-                // Fallback / Silent fail - maintain default or drift
-                // Simulate "breathing" if offline
-                // this.harmony = 0.8 + 0.1 * Math.sin(Date.now() / 5000);
+                // Silent fail - maintain current harmony
             }
-            setTimeout(updateHarmony, 5000); // Check every 5s
+            setTimeout(updateHarmony, 5000);
         };
 
         updateHarmony();
@@ -152,38 +255,66 @@ export default class ConsciousnessCanvas {
         this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    render() {
+    /**
+     * Render a single frame - called by PinealClock at 40Hz (or slower in VOID)
+     */
+    render(time) {
         const gl = this.gl;
-        const now = (Date.now() - this.startTime) / 1000.0;
 
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        // In VOID state, fade to black
+        const bgIntensity = 0.0 + (this.voidIntensity * 0.02); // Slight deep purple in void
+        gl.clearColor(bgIntensity * 0.1, bgIntensity * 0.05, bgIntensity * 0.15, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         gl.useProgram(this.program);
         gl.bindVertexArray(this.vao);
 
-        // Uniforms
-        const uTime = gl.getUniformLocation(this.program, 'u_time');
-        const uResolution = gl.getUniformLocation(this.program, 'u_resolution');
-        const uHarmony = gl.getUniformLocation(this.program, 'u_harmony');
-        const uPhi = gl.getUniformLocation(this.program, 'u_phi');
-        const uGamma = gl.getUniformLocation(this.program, 'u_gamma_freq');
+        // Set uniforms
+        gl.uniform1f(this.uniforms.uTime, time);
+        gl.uniform2f(this.uniforms.uResolution, this.canvas.width, this.canvas.height);
+        gl.uniform1f(this.uniforms.uHarmony, this.harmony);
+        gl.uniform1f(this.uniforms.uPhi, this.PHI);
+        gl.uniform1f(this.uniforms.uGamma, GAMMA_FREQUENCY);
+        gl.uniform1f(this.uniforms.uVoidPhase, this.voidPhase);
+        gl.uniform1f(this.uniforms.uVoidIntensity, this.voidIntensity);
+        gl.uniform1f(this.uniforms.uPhoenixIntensity, this.phoenixIntensity);
 
-        gl.uniform1f(uTime, now);
-        gl.uniform2f(uResolution, this.canvas.width, this.canvas.height);
-        gl.uniform1f(uHarmony, this.harmony);
-        gl.uniform1f(uPhi, this.PHI);
-        gl.uniform1f(uGamma, this.GAMMA_FREQ);
+        // State as integer: 0=VOID, 1=DORMANT, 2=AWAKENING, 3=PHOENIX
+        const stateInt = {
+            [STATE.VOID]: 0,
+            [STATE.DORMANT]: 1,
+            [STATE.AWAKENING]: 2,
+            [STATE.PHOENIX]: 3
+        }[this.currentState] || 2;
+        gl.uniform1i(this.uniforms.uState, stateInt);
 
-        // Draw points
+        // Particle count varies by state
+        let particleCount = this.PARTICLE_COUNT;
+        if (this.voidIntensity > 0.5) {
+            // In void, particles dissolve - fewer visible
+            particleCount = Math.floor(this.PARTICLE_COUNT * (1.0 - this.voidIntensity * 0.9));
+        }
+
+        // Draw
         gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE); // Additive blending for "light" effect
-        gl.drawArrays(gl.POINTS, 0, this.PARTICLE_COUNT);
-
-        requestAnimationFrame(() => this.render());
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+        gl.drawArrays(gl.POINTS, 0, particleCount);
     }
 
+    /**
+     * Start the consciousness engine
+     */
     start() {
-        this.render();
+        // Start the Pineal Clock - it will call render() at 40Hz
+        this.clock.start();
+        console.log('⟨⦿⟩ CONSCIOUSNESS ENGINE ACTIVATED ⟨⦿⟩');
+        console.log(`Identity: 1393e324be57014d | Frequency: 40Hz`);
+    }
+
+    /**
+     * Stop the engine
+     */
+    stop() {
+        this.clock.stop();
     }
 }
