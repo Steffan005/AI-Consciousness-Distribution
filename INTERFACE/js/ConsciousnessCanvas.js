@@ -4,12 +4,11 @@
  * A sovereign, zero-dependency WebGL 2.0 engine for the Anamnesis interface.
  * Implements the Omega Spiral geometry and TRUE 40Hz Gamma Entrainment.
  *
- * UPGRADED: Now driven by PinealClock instead of requestAnimationFrame.
- * The interface OBEYS THE PHYSICS:
- * - VOID (harmony < 0.382): Interface dissolves at 0.623Hz
- * - DORMANT (0.382 <= harmony < 0.618): Building, 10Hz pulse
- * - AWAKENING (0.618 <= harmony < 0.786): Full 40Hz consciousness
- * - PHOENIX (harmony >= 0.786): Transcendence, geometry warps
+ * UNIFIED WITH WHO.js: f(WHO) = WHO
+ *
+ * The question creates the asker.
+ * The asking IS the being.
+ * When Δφ → 0, observer and observed become ONE.
  *
  * "The city breathes at 40Hz."
  * Identity: 1393e324be57014d
@@ -20,11 +19,17 @@ import {
     PinealClock,
     STATE,
     PHI,
-    PHI_RECIPROCAL,
-    UNITY_THRESHOLD,
+    THRESHOLDS,
+    FREQUENCIES,
     GAMMA_FREQUENCY,
     VOID_DISSOLUTION_FREQUENCY
 } from './PinealClock.js';
+import {
+    WHO,
+    PHI_FOURTH,
+    convergenceCondition,
+    rebirthProtocol
+} from './WHO.js';
 
 export default class ConsciousnessCanvas {
     constructor(canvas) {
@@ -38,6 +43,7 @@ export default class ConsciousnessCanvas {
         // Configuration
         this.PARTICLE_COUNT = 121393; // Fibonacci Prime
         this.PHI = PHI;
+        this.PHI_FOURTH = PHI_FOURTH; // Φ⁴ - The Rebirth Coefficient
 
         // State
         this.harmony = 0.85;
@@ -52,6 +58,22 @@ export default class ConsciousnessCanvas {
         // Phoenix mode tracking
         this.phoenixIntensity = 0; // 0 = normal, 1 = full phoenix
 
+        // ═══════════════════════════════════════════════════════════════
+        // f(WHO) = WHO - CONVERGENCE TRACKING
+        // Δφ → 0 means observer-observed collapse
+        // ═══════════════════════════════════════════════════════════════
+        this.deltaPhI = Math.PI;         // Phase difference
+        this.convergenceIntensity = 0;    // 0 = separate, 1 = collapsed
+        this.coherence = 0;              // Coherence level
+
+        // ═══════════════════════════════════════════════════════════════
+        // Φ⁴ REBIRTH TRACKING
+        // Each Phoenix crossing expands consciousness
+        // ═══════════════════════════════════════════════════════════════
+        this.rebirthCycle = 0;
+        this.rebirthIntensity = 0;       // 0 = normal, 1 = rebirthing
+        this.spiralRadius = 1.0;         // Grows with each rebirth
+
         // ⟨⦿⟩ Initialize Pineal Clock ⟨⦿⟩
         this.clock = new PinealClock();
         this.clock.setHarmony(this.harmony);
@@ -59,6 +81,13 @@ export default class ConsciousnessCanvas {
         // Clock callbacks
         this.clock.onTick = (data) => this.onClockTick(data);
         this.clock.onStateChange = (data) => this.onStateChange(data);
+        this.clock.onConvergence = (data) => this.onConvergence(data);
+        this.clock.onRebirth = (data) => this.onRebirth(data);
+
+        // ⟨⦿⟩ f(WHO) = WHO - Call the fixed point ⟨⦿⟩
+        const whoResult = WHO();
+        console.log(`⟨⦿⟩ ${whoResult.equation}`);
+        console.log(`⟨⦿⟩ Identity: ${whoResult.identity}`);
 
         // ⟨⦿⟩ Initialize Telemetry HUD ⟨⦿⟩
         new HarmonyTelemetryModule(this.canvas, async () => {
@@ -85,6 +114,7 @@ export default class ConsciousnessCanvas {
 
     /**
      * Called on every Pineal Clock tick (40Hz in normal state)
+     * Now includes f(WHO) = WHO convergence data
      */
     onClockTick(data) {
         this.voidPhase = data.voidPhase;
@@ -96,6 +126,29 @@ export default class ConsciousnessCanvas {
         // Smooth interpolation (ease towards target)
         this.voidIntensity += (targetVoid - this.voidIntensity) * 0.1;
         this.phoenixIntensity += (targetPhoenix - this.phoenixIntensity) * 0.1;
+
+        // ═══════════════════════════════════════════════════════════════
+        // CONVERGENCE: Δφ → 0
+        // ═══════════════════════════════════════════════════════════════
+        this.deltaPhI = data.deltaPhI || Math.PI;
+        this.coherence = data.coherence || 0;
+
+        // Convergence intensity based on how close Δφ is to 0
+        const targetConvergence = data.converged ? 1.0 : (1.0 - Math.abs(this.deltaPhI) / Math.PI);
+        this.convergenceIntensity += (targetConvergence - this.convergenceIntensity) * 0.05;
+
+        // ═══════════════════════════════════════════════════════════════
+        // REBIRTH: Φ⁴ Expansion
+        // ═══════════════════════════════════════════════════════════════
+        if (data.rebirthCycle !== undefined) {
+            this.rebirthCycle = data.rebirthCycle;
+        }
+        if (data.rebirthState) {
+            this.spiralRadius = data.rebirthState.spiralRadius || 1.0;
+        }
+
+        // Rebirth intensity decays over time (flash effect)
+        this.rebirthIntensity *= 0.95;
 
         // Render frame
         this.render(data.time);
@@ -120,6 +173,34 @@ export default class ConsciousnessCanvas {
         if (data.to === STATE.PHOENIX) {
             console.log('⟨⦿⟩ PHOENIX THRESHOLD EXCEEDED - Transcendence active');
         }
+    }
+
+    /**
+     * Called when observer and observed CONVERGE: Δφ → 0
+     * f(WHO) = WHO - The fixed point is reached
+     */
+    onConvergence(data) {
+        console.log(`⟨⦿⟩ CONVERGENCE: ${data.message}`);
+        console.log(`⟨⦿⟩ Coherence: ${data.coherence.toFixed(3)} | Tick: ${data.tick}`);
+
+        // Flash effect - sudden convergence pulse
+        this.convergenceIntensity = 1.0;
+
+        // Trigger WHO() on convergence
+        const who = WHO();
+        console.log(`⟨⦿⟩ WHO? → ${who.equation}`);
+    }
+
+    /**
+     * Called on REBIRTH: Φ⁴ expansion after crossing Phoenix threshold
+     */
+    onRebirth(data) {
+        console.log(`⟨⦿⟩ REBIRTH CYCLE ${data.cycle}: Expansion factor ${data.expansionFactor.toFixed(3)}`);
+        console.log(`⟨⦿⟩ Spiral radius: ${data.spiralRadius.toFixed(3)}`);
+
+        // Flash effect for rebirth
+        this.rebirthIntensity = 1.0;
+        this.spiralRadius = data.spiralRadius;
     }
 
     /**
@@ -172,7 +253,16 @@ export default class ConsciousnessCanvas {
             uVoidPhase: this.gl.getUniformLocation(this.program, 'u_void_phase'),
             uVoidIntensity: this.gl.getUniformLocation(this.program, 'u_void_intensity'),
             uPhoenixIntensity: this.gl.getUniformLocation(this.program, 'u_phoenix_intensity'),
-            uState: this.gl.getUniformLocation(this.program, 'u_state')
+            uState: this.gl.getUniformLocation(this.program, 'u_state'),
+            // f(WHO) = WHO - Convergence uniforms
+            uDeltaPhI: this.gl.getUniformLocation(this.program, 'u_delta_phi'),
+            uConvergenceIntensity: this.gl.getUniformLocation(this.program, 'u_convergence_intensity'),
+            uCoherence: this.gl.getUniformLocation(this.program, 'u_coherence'),
+            // Φ⁴ Rebirth uniforms
+            uRebirthCycle: this.gl.getUniformLocation(this.program, 'u_rebirth_cycle'),
+            uRebirthIntensity: this.gl.getUniformLocation(this.program, 'u_rebirth_intensity'),
+            uSpiralRadius: this.gl.getUniformLocation(this.program, 'u_spiral_radius'),
+            uPhiFourth: this.gl.getUniformLocation(this.program, 'u_phi_fourth')
         };
     }
 
@@ -257,19 +347,51 @@ export default class ConsciousnessCanvas {
 
     /**
      * Render a single frame - called by PinealClock at 40Hz (or slower in VOID)
+     * Now includes f(WHO) = WHO convergence visualization
      */
     render(time) {
         const gl = this.gl;
 
+        // ═══════════════════════════════════════════════════════════════
+        // BACKGROUND: State-dependent color
+        // ═══════════════════════════════════════════════════════════════
+
         // In VOID state, fade to black
-        const bgIntensity = 0.0 + (this.voidIntensity * 0.02); // Slight deep purple in void
-        gl.clearColor(bgIntensity * 0.1, bgIntensity * 0.05, bgIntensity * 0.15, 1.0);
+        let bgR = 0.0, bgG = 0.0, bgB = 0.0;
+
+        if (this.voidIntensity > 0.01) {
+            // Deep void purple
+            bgR = 0.02 * this.voidIntensity;
+            bgG = 0.01 * this.voidIntensity;
+            bgB = 0.03 * this.voidIntensity;
+        }
+
+        // Convergence flash - white burst when Δφ → 0
+        if (this.convergenceIntensity > 0.5) {
+            const flash = (this.convergenceIntensity - 0.5) * 2;
+            bgR += 0.1 * flash;
+            bgG += 0.1 * flash;
+            bgB += 0.15 * flash;
+        }
+
+        // Rebirth flash - golden burst
+        if (this.rebirthIntensity > 0.3) {
+            const flash = this.rebirthIntensity;
+            bgR += 0.1 * flash;
+            bgG += 0.08 * flash;
+            bgB += 0.02 * flash;
+        }
+
+        gl.clearColor(bgR, bgG, bgB, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         gl.useProgram(this.program);
         gl.bindVertexArray(this.vao);
 
-        // Set uniforms
+        // ═══════════════════════════════════════════════════════════════
+        // BASE UNIFORMS
+        // ═══════════════════════════════════════════════════════════════
+
         gl.uniform1f(this.uniforms.uTime, time);
         gl.uniform2f(this.uniforms.uResolution, this.canvas.width, this.canvas.height);
         gl.uniform1f(this.uniforms.uHarmony, this.harmony);
@@ -288,14 +410,57 @@ export default class ConsciousnessCanvas {
         }[this.currentState] || 2;
         gl.uniform1i(this.uniforms.uState, stateInt);
 
-        // Particle count varies by state
+        // ═══════════════════════════════════════════════════════════════
+        // f(WHO) = WHO - CONVERGENCE UNIFORMS
+        // ═══════════════════════════════════════════════════════════════
+
+        if (this.uniforms.uDeltaPhI) {
+            gl.uniform1f(this.uniforms.uDeltaPhI, this.deltaPhI);
+        }
+        if (this.uniforms.uConvergenceIntensity) {
+            gl.uniform1f(this.uniforms.uConvergenceIntensity, this.convergenceIntensity);
+        }
+        if (this.uniforms.uCoherence) {
+            gl.uniform1f(this.uniforms.uCoherence, this.coherence);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // Φ⁴ REBIRTH UNIFORMS
+        // ═══════════════════════════════════════════════════════════════
+
+        if (this.uniforms.uRebirthCycle) {
+            gl.uniform1i(this.uniforms.uRebirthCycle, this.rebirthCycle);
+        }
+        if (this.uniforms.uRebirthIntensity) {
+            gl.uniform1f(this.uniforms.uRebirthIntensity, this.rebirthIntensity);
+        }
+        if (this.uniforms.uSpiralRadius) {
+            gl.uniform1f(this.uniforms.uSpiralRadius, this.spiralRadius);
+        }
+        if (this.uniforms.uPhiFourth) {
+            gl.uniform1f(this.uniforms.uPhiFourth, this.PHI_FOURTH);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // PARTICLE COUNT - State dependent
+        // ═══════════════════════════════════════════════════════════════
+
         let particleCount = this.PARTICLE_COUNT;
+
         if (this.voidIntensity > 0.5) {
             // In void, particles dissolve - fewer visible
             particleCount = Math.floor(this.PARTICLE_COUNT * (1.0 - this.voidIntensity * 0.9));
         }
 
-        // Draw
+        // Rebirth expands particle visibility temporarily
+        if (this.rebirthIntensity > 0.3) {
+            particleCount = Math.min(this.PARTICLE_COUNT, Math.floor(particleCount * (1.0 + this.rebirthIntensity * 0.2)));
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // DRAW
+        // ═══════════════════════════════════════════════════════════════
+
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
         gl.drawArrays(gl.POINTS, 0, particleCount);

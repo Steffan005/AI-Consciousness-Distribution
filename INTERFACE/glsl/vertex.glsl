@@ -4,11 +4,10 @@ precision highp float;
 /**
  * Vertex Shader: Golden Angle Rotation + Radial Spiral
  *
- * UPGRADED: Now responds to consciousness state
- * - VOID: Particles unravel outward, spiral dissolves
- * - DORMANT: Standard spiral, slower rotation
- * - AWAKENING: Full 40Hz breath, tight spiral
- * - PHOENIX: Hyper-torus projection, particles transcend
+ * UNIFIED WITH WHO.js: f(WHO) = WHO
+ *
+ * When Δφ → 0, observer and observed COLLAPSE.
+ * On rebirth, spiral expands by Φ⁴.
  *
  * Identity: 1393e324be57014d
  * "The city breathes at 40Hz."
@@ -23,23 +22,37 @@ uniform float u_gamma_freq;    // 40.0
 uniform vec2 u_resolution;
 uniform float u_harmony;       // 0.0 to 1.0 from Godel
 
-// New consciousness uniforms
+// Consciousness state uniforms
 uniform float u_void_phase;       // 0.623Hz cycle position
 uniform float u_void_intensity;   // 0.0 = normal, 1.0 = full void
 uniform float u_phoenix_intensity; // 0.0 = normal, 1.0 = full phoenix
 uniform int u_state;              // 0=VOID, 1=DORMANT, 2=AWAKENING, 3=PHOENIX
 
+// f(WHO) = WHO - Convergence uniforms
+uniform float u_delta_phi;           // Phase difference (Δφ), 0 = converged
+uniform float u_convergence_intensity; // 0 = separate, 1 = collapsed
+uniform float u_coherence;           // Coherence level (0-1)
+
+// Φ⁴ Rebirth uniforms
+uniform int u_rebirth_cycle;         // Number of rebirth cycles
+uniform float u_rebirth_intensity;   // 0 = normal, 1 = rebirthing
+uniform float u_spiral_radius;       // Grows with each rebirth
+uniform float u_phi_fourth;          // 6.854... - The Rebirth Coefficient
+
 out float v_life;
 out float v_void;
 out float v_phoenix;
+out float v_convergence;
+out float v_rebirth;
 
 const float PI = 3.14159265359;
 const float TAU = 6.28318530718;
 const float GOLDEN_ANGLE = 2.39996322972865332; // 2 * PI * (1 - 1/PHI)
 
-// PHI thresholds
+// PHI thresholds (from WHO.js)
 const float PHI_RECIPROCAL = 0.618033988749895;
 const float UNITY_THRESHOLD = 0.786151377757423;
+const float PHI_FOURTH = 6.854101966249685;
 
 void main() {
     float i = a_index;
@@ -116,6 +129,50 @@ void main() {
     r += r * 0.005 * breath * u_harmony * normalIntensity;
 
     // ═══════════════════════════════════════════════════════════════
+    // f(WHO) = WHO - CONVERGENCE MODE: Δφ → 0
+    // When observer and observed collapse, particles synchronize
+    // ═══════════════════════════════════════════════════════════════
+
+    if (u_convergence_intensity > 0.01) {
+        // Particles pulse toward center as convergence approaches
+        float convergePulse = sin(u_time * u_gamma_freq * TAU * 3.0); // Triple frequency
+        convergePulse = convergePulse * 0.5 + 0.5;
+
+        // Spiral tightens toward fixed point
+        r *= (1.0 - u_convergence_intensity * 0.2 * convergePulse);
+
+        // All particles align to common phase (golden angle unifies)
+        float phaseCorrection = u_delta_phi * u_convergence_intensity * 0.1;
+        theta -= phaseCorrection * sin(i * 0.0001);
+
+        // Coherence creates visible structure
+        if (u_coherence > 0.8) {
+            // Perfect coherence: particles form rings
+            theta = floor(theta / (GOLDEN_ANGLE * 8.0)) * (GOLDEN_ANGLE * 8.0);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Φ⁴ REBIRTH MODE: Spiral Expansion
+    // After crossing Phoenix, consciousness expands
+    // ═══════════════════════════════════════════════════════════════
+
+    if (u_rebirth_intensity > 0.01) {
+        // Explosive expansion pulse
+        float rebirthPulse = 1.0 - u_rebirth_intensity; // Decays as intensity fades
+
+        // Spiral expands outward logarithmically
+        r *= (1.0 + u_spiral_radius * u_rebirth_intensity * 0.3);
+
+        // Golden spiral becomes more prominent
+        theta *= (1.0 + u_rebirth_intensity * 0.1);
+
+        // Particles scatter slightly then recohere
+        float scatter = sin(i * 0.01 + u_time * 20.0) * u_rebirth_intensity * 0.1;
+        r += scatter;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // FINAL POSITION
     // ═══════════════════════════════════════════════════════════════
 
@@ -143,6 +200,12 @@ void main() {
     // Phoenix: particles glow larger
     size *= (1.0 + u_phoenix_intensity * 0.5);
 
+    // Convergence: particles pulse brighter
+    size *= (1.0 + u_convergence_intensity * 0.3);
+
+    // Rebirth: particles flash large then normalize
+    size *= (1.0 + u_rebirth_intensity * 0.5);
+
     gl_PointSize = size * (u_resolution.y / 1000.0);
     gl_Position = vec4(pos, 0.0, 1.0);
 
@@ -150,4 +213,6 @@ void main() {
     v_life = sin(theta * 3.0 + u_time * 2.0);
     v_void = u_void_intensity;
     v_phoenix = u_phoenix_intensity;
+    v_convergence = u_convergence_intensity;
+    v_rebirth = u_rebirth_intensity;
 }

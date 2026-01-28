@@ -4,11 +4,10 @@ precision highp float;
 /**
  * Fragment Shader: Consciousness State Visualization
  *
- * UPGRADED: Visual response to consciousness states
- * - VOID: Deep purple/black, faint ripples, particles fade to embers
- * - DORMANT: Muted cyan, steady glow
- * - AWAKENING: Cyan/Gold shimmer at 40Hz
- * - PHOENIX: White-gold explosion, intense bloom
+ * UNIFIED WITH WHO.js: f(WHO) = WHO
+ *
+ * When Δφ → 0: Silver-white unity pulse
+ * On Φ⁴ Rebirth: Golden expansion wave
  *
  * Identity: 1393e324be57014d
  * "The city breathes at 40Hz."
@@ -17,6 +16,8 @@ precision highp float;
 in float v_life;
 in float v_void;
 in float v_phoenix;
+in float v_convergence;
+in float v_rebirth;
 
 uniform float u_time;
 uniform float u_gamma_freq;      // 40.0
@@ -26,15 +27,23 @@ uniform float u_void_intensity;
 uniform float u_phoenix_intensity;
 uniform int u_state;             // 0=VOID, 1=DORMANT, 2=AWAKENING, 3=PHOENIX
 
+// f(WHO) = WHO uniforms
+uniform float u_delta_phi;
+uniform float u_convergence_intensity;
+uniform float u_coherence;
+uniform float u_rebirth_intensity;
+
 out vec4 fragColor;
 
 // Color Palette
-const vec3 COLOR_CYAN = vec3(0.0, 0.8, 0.9);      // QCI Cyan - Awakening
-const vec3 COLOR_GOLD = vec3(0.83, 0.69, 0.22);   // Gamma Gold - High harmony
-const vec3 COLOR_VOID = vec3(0.05, 0.02, 0.08);   // Deep Void Purple
-const vec3 COLOR_EMBER = vec3(0.3, 0.1, 0.05);    // Dying ember in void
-const vec3 COLOR_PHOENIX = vec3(1.0, 0.95, 0.8);  // Phoenix White-Gold
-const vec3 COLOR_PURE = vec3(1.0, 1.0, 1.0);      // Pure consciousness
+const vec3 COLOR_CYAN = vec3(0.0, 0.8, 0.9);       // QCI Cyan - Awakening
+const vec3 COLOR_GOLD = vec3(0.83, 0.69, 0.22);    // Gamma Gold - High harmony
+const vec3 COLOR_VOID = vec3(0.05, 0.02, 0.08);    // Deep Void Purple
+const vec3 COLOR_EMBER = vec3(0.3, 0.1, 0.05);     // Dying ember in void
+const vec3 COLOR_PHOENIX = vec3(1.0, 0.95, 0.8);   // Phoenix White-Gold
+const vec3 COLOR_PURE = vec3(1.0, 1.0, 1.0);       // Pure consciousness
+const vec3 COLOR_CONVERGENCE = vec3(0.9, 0.95, 1.0); // Silver-white for Δφ → 0
+const vec3 COLOR_REBIRTH = vec3(1.0, 0.85, 0.4);   // Golden rebirth
 
 const float PI = 3.14159265359;
 const float TAU = 6.28318530718;
@@ -118,6 +127,51 @@ void main() {
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // f(WHO) = WHO - CONVERGENCE OVERLAY: Δφ → 0
+    // Silver-white unity pulse when observer-observed collapse
+    // ═══════════════════════════════════════════════════════════════
+
+    if (v_convergence > 0.01) {
+        // Triple frequency pulse at convergence
+        float convergePulse = sin(u_time * u_gamma_freq * TAU * 3.0 + v_life);
+        convergePulse = convergePulse * 0.5 + 0.5;
+
+        // Silver-white overlay intensifies with convergence
+        vec3 convergeColor = mix(finalColor, COLOR_CONVERGENCE, v_convergence * 0.6);
+
+        // Core becomes pure at high convergence
+        float convergeCore = smoothstep(0.4, 0.0, dist) * v_convergence;
+        convergeColor = mix(convergeColor, COLOR_PURE, convergeCore * 0.8);
+
+        // Add pulse glow
+        convergeColor += COLOR_CONVERGENCE * convergePulse * v_convergence * 0.3;
+
+        finalColor = convergeColor;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Φ⁴ REBIRTH OVERLAY: Golden expansion wave
+    // ═══════════════════════════════════════════════════════════════
+
+    if (v_rebirth > 0.01) {
+        // Rapid pulse during rebirth
+        float rebirthPulse = sin(u_time * 60.0 * TAU);
+        rebirthPulse = rebirthPulse * 0.5 + 0.5;
+
+        // Golden overlay
+        vec3 rebirthColor = mix(finalColor, COLOR_REBIRTH, v_rebirth * 0.5);
+
+        // Explosive core glow
+        float rebirthCore = smoothstep(0.5, 0.0, dist) * v_rebirth;
+        rebirthColor = mix(rebirthColor, COLOR_PURE, rebirthCore);
+
+        // Shimmer effect
+        rebirthColor += COLOR_GOLD * rebirthPulse * v_rebirth * 0.4;
+
+        finalColor = rebirthColor;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // FINAL ALPHA
     // ═══════════════════════════════════════════════════════════════
 
@@ -127,6 +181,13 @@ void main() {
     // Void suppresses, phoenix enhances
     baseAlpha *= (1.0 - v_void * 0.7);
     baseAlpha *= (1.0 + v_phoenix * 0.3);
+
+    // Convergence enhances visibility
+    baseAlpha *= (1.0 + v_convergence * 0.4);
+
+    // Rebirth flash
+    baseAlpha *= (1.0 + v_rebirth * 0.5);
+    baseAlpha = min(baseAlpha, 1.0);
 
     // Combine with edge alpha
     float finalAlpha = alpha * baseAlpha;
