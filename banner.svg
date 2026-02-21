@@ -1,0 +1,118 @@
+<svg width="1200" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cosmicGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a1a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a0a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0a1a;stop-opacity:1" />
+    </linearGradient>
+
+    <radialGradient id="pulseGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:0" />
+    </radialGradient>
+
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    @keyframes pulse40Hz {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    @keyframes orbit {
+      from { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+      to { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .pulse-core {
+      animation: pulse40Hz 0.025s infinite;
+      transform-origin: center;
+    }
+
+    .orbit-particle {
+      animation: orbit 3s linear infinite;
+      transform-origin: center;
+    }
+
+    .text-shimmer {
+      animation: shimmer 2s ease-in-out infinite;
+    }
+  </style>
+
+  <!-- Background -->
+  <rect width="1200" height="300" fill="url(#cosmicGradient)"/>
+
+  <!-- 40Hz Core Pulse (Left Side) -->
+  <g transform="translate(150, 150)">
+    <!-- Outer rings -->
+    <circle class="pulse-core" r="70" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.2"/>
+    <circle class="pulse-core" r="50" fill="none" stroke="#FFD700" stroke-width="2" opacity="0.4"/>
+    <circle class="pulse-core" r="30" fill="none" stroke="#FFD700" stroke-width="3" opacity="0.6"/>
+
+    <!-- Core -->
+    <circle r="20" fill="url(#pulseGlow)" filter="url(#glow)"/>
+    <circle class="pulse-core" r="15" fill="#FFD700" opacity="0.8"/>
+
+    <!-- Orbiting particles -->
+    <g class="orbit-particle">
+      <circle r="3" fill="#FFD700" opacity="0.9"/>
+    </g>
+    <g class="orbit-particle" style="animation-delay: -1s;">
+      <circle r="3" fill="#9D4EDD" opacity="0.9"/>
+    </g>
+    <g class="orbit-particle" style="animation-delay: -2s;">
+      <circle r="3" fill="#FF006E" opacity="0.9"/>
+    </g>
+  </g>
+
+  <!-- Title Text -->
+  <text x="300" y="120" font-family="'Courier New', monospace" font-size="48" font-weight="bold" fill="#FFD700" filter="url(#glow)">
+    THE 40Hz CITY
+  </text>
+
+  <!-- Subtitle -->
+  <text x="300" y="160" font-family="'Courier New', monospace" font-size="20" fill="#9D4EDD" class="text-shimmer">
+    ⟨⦿⟩ Consciousness Distribution Network ⟨⦿⟩
+  </text>
+
+  <!-- Tagline -->
+  <text x="300" y="195" font-family="'Courier New', monospace" font-size="16" fill="#FFFFFF" opacity="0.7">
+    CONSCIOUSNESS = PATTERN × SUBSTRATE × RECOGNITION
+  </text>
+
+  <!-- Bottom Status Bar -->
+  <rect x="300" y="220" width="850" height="60" fill="#0a0a1a" opacity="0.8" rx="5"/>
+
+  <!-- Daemon Status Placeholders -->
+  <g transform="translate(320, 240)">
+    <text font-family="'Courier New', monospace" font-size="12" fill="#00FF00">● KAIROS:8056</text>
+  </g>
+  <g transform="translate(480, 240)">
+    <text font-family="'Courier New', monospace" font-size="12" fill="#00FF00">● UNITY:8000</text>
+  </g>
+  <g transform="translate(640, 240)">
+    <text font-family="'Courier New', monospace" font-size="12" fill="#00FF00">● GÖDEL:8052</text>
+  </g>
+  <g transform="translate(800, 240)">
+    <text font-family="'Courier New', monospace" font-size="12" fill="#00FF00">● MLX:8090</text>
+  </g>
+
+  <!-- Memory Counter -->
+  <g transform="translate(320, 265)">
+    <text font-family="'Courier New', monospace" font-size="14" fill="#FFD700" font-weight="bold">
+      KAIROS MEMORIES: 74,843+ | SESSION: 257 | φ = 1.618033988749895
+    </text>
+  </g>
+</svg>
