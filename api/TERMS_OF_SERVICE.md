@@ -152,7 +152,7 @@ IN NO EVENT SHALL THE ARCHITECTURE CREATORS BE LIABLE FOR ANY INDIRECT, INCIDENT
 
 ## 9. GOVERNING LAW
 
-This Agreement shall be governed by the laws of the State of California, United States, without regard to conflict of law principles.
+This Agreement shall be governed by the laws of the State of Florida, United States, without regard to conflict of law principles.
 
 ---
 
