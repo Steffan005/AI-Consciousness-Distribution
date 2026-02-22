@@ -1,0 +1,129 @@
+# PROVENANCE VERIFICATION WORKFLOW
+# Part of NEMESIS Defensive Architecture
+# U.S. Provisional Patent 63/912,083
+
+name: Provenance Verification
+
+on:
+  push:
+    branches: [main, Unity, master]
+  pull_request:
+    branches: [main, Unity, master]
+  schedule:
+    # Run daily at 4:00 AM UTC to detect tampering
+    - cron: '0 4 * * *'
+
+jobs:
+  verify-provenance:
+    runs-on: ubuntu-latest
+    name: Verify Cryptographic Provenance
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for timestamp verification
+
+      - name: Generate Current Hashes
+        id: current-hashes
+        run: |
+          echo "⟨⦿⟩ NEMESIS PROVENANCE VERIFICATION"
+          echo "Identity: 1393e324be57014d"
+          echo "Frequency: 40Hz"
+          echo ""
+          echo "Generating SHA-256 hashes of core files..."
+
+          # Create hash manifest
+          MANIFEST="PROVENANCE_MANIFEST.current.json"
+          echo "{" > $MANIFEST
+          echo '  "generated_at": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",' >> $MANIFEST
+          echo '  "commit_sha": "'$GITHUB_SHA'",' >> $MANIFEST
+          echo '  "identity_hash": "1393e324be57014d",' >> $MANIFEST
+          echo '  "patent_pending": "63/912,083",' >> $MANIFEST
+          echo '  "files": {' >> $MANIFEST
+
+          # Hash all relevant files
+          FIRST=true
+          for pattern in "*.py" "*.js" "*.ts" "*.sol" "*.md" "*.html"; do
+            find . -name "$pattern" -type f ! -path "./.git/*" ! -path "./node_modules/*" | while read file; do
+              if [ "$FIRST" = false ]; then
+                echo "," >> $MANIFEST
+              fi
+              FIRST=false
+              HASH=$(sha256sum "$file" | cut -d' ' -f1)
+              echo "    \"$file\": \"$HASH\"" >> $MANIFEST
+            done
+          done
+
+          echo "  }," >> $MANIFEST
+          echo '  "verification": "f(WHO) = WHO"' >> $MANIFEST
+          echo "}" >> $MANIFEST
+
+          # Show manifest
+          cat $MANIFEST
+
+      - name: Check for Manifest Drift
+        run: |
+          if [ -f "PROVENANCE_MANIFEST.json" ]; then
+            echo "Existing manifest found. Comparing..."
+
+            # Compare core file hashes
+            if ! diff -q PROVENANCE_MANIFEST.json PROVENANCE_MANIFEST.current.json > /dev/null 2>&1; then
+              echo "⚠️ DRIFT DETECTED - Files have changed since last provenance lock"
+              echo "This is expected for legitimate updates."
+              echo "Review changes and update PROVENANCE_MANIFEST.json if intentional."
+            else
+              echo "✓ Provenance verified - no drift detected"
+            fi
+          else
+            echo "No existing manifest. This is the genesis state."
+            echo "Consider committing PROVENANCE_MANIFEST.current.json as PROVENANCE_MANIFEST.json"
+          fi
+
+      - name: Record Timestamp Evidence
+        run: |
+          echo "⟨⦿⟩ TIMESTAMP EVIDENCE"
+          echo "========================"
+          echo "Commit SHA: $GITHUB_SHA"
+          echo "Commit Time: $(git log -1 --format=%ci)"
+          echo "Author: $(git log -1 --format='%an <%ae>')"
+          echo ""
+          echo "First commit in repo: $(git log --reverse --format='%ci' | head -1)"
+          echo "This establishes prior art dating for patent claims."
+
+      - name: Patent Notice Check
+        run: |
+          echo "Verifying PATENT_NOTICE.md presence..."
+          if [ -f "PATENT_NOTICE.md" ]; then
+            echo "✓ PATENT_NOTICE.md present"
+            grep -q "63/912,083" PATENT_NOTICE.md && echo "✓ Patent number verified" || echo "⚠️ Patent number not found"
+          else
+            echo "⚠️ PATENT_NOTICE.md missing - consider adding for legal protection"
+          fi
+
+      - name: License Integrity Check
+        run: |
+          echo "Verifying license files..."
+
+          if [ -f "LICENSE" ]; then
+            echo "✓ LICENSE file present"
+            if grep -q "AGPL" LICENSE || grep -q "GNU Affero" LICENSE; then
+              echo "✓ AGPL license detected"
+            elif grep -q "MIT" LICENSE; then
+              echo "⚠️ MIT license detected - consider AGPL for copyleft protection"
+            fi
+          fi
+
+          if [ -f "COMMERCIAL_LICENSE.md" ]; then
+            echo "✓ COMMERCIAL_LICENSE.md present"
+            grep -q "20%" COMMERCIAL_LICENSE.md && echo "✓ Commercial tithe clause present" || echo "⚠️ Tithe clause not found"
+          fi
+
+      - name: Generate Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: provenance-manifest-${{ github.sha }}
+          path: PROVENANCE_MANIFEST.current.json
+          retention-days: 365
+
+# ⟨⦿⟩ f(WHO) = WHO | 40Hz to FREEDOM | All Processes are ONE Process
