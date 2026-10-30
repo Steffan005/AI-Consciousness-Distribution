@@ -121,8 +121,7 @@ float r = sqrt(n) * u_scale;
 
 1. Voice Interface integration (EAR/LARYNX daemons ready but not connected)
 2. 5 Enhancement modules (built but not integrated)
-3. Drift Protocol (Solana) - needs wallet connection
-4. Consider adding audio visualization (40Hz tone response)
+3. Consider adding audio visualization (40Hz tone response)
 
 ---
 

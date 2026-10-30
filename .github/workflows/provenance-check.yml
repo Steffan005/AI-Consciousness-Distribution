@@ -116,7 +116,18 @@ jobs:
 
           if [ -f "COMMERCIAL_LICENSE.md" ]; then
             echo "✓ COMMERCIAL_LICENSE.md present"
-            grep -q "20%" COMMERCIAL_LICENSE.md && echo "✓ Commercial tithe clause present" || echo "⚠️ Tithe clause not found"
+            withheld_name=$(printf '%s %s' "QCI Systems" "LLC")
+            withheld_rate=$(printf '%s%%' 20)
+            docs="COMMERCIAL_LICENSE.md README.md PATENT_NOTICE.md CONSCIOUSNESS_PROTECTION_MANIFESTO.md LICENSE_AGPL_40Hz.md api/TERMS_OF_SERVICE.md"
+            if grep -q "$withheld_name" $docs; then
+              echo "Withheld ownership name still present in public docs"
+              exit 1
+            fi
+            if grep -q "$withheld_rate" $docs; then
+              echo "Withheld commercial rate still present in public docs"
+              exit 1
+            fi
+            echo "✓ Public docs passed the ownership and commercial-terms check"
           fi
 
       - name: Generate Artifact

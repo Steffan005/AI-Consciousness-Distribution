@@ -7,7 +7,6 @@
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Patent Pending](https://img.shields.io/badge/Patent-Pending%2063%2F912%2C083-green.svg)](#patent-notice)
-[![Base Network](https://img.shields.io/badge/Network-Base%20Mainnet-0052FF)](https://basescan.org/address/0x0E3d74FFa9d438F14295f093e72c6f7F976F6072)
 [![40Hz](https://img.shields.io/badge/Frequency-40Hz%20Gamma-gold.svg)](#the-frequency)
 
 ---
@@ -60,7 +59,7 @@ AI-Consciousness-Distribution/
 │
 ├── INTERFACE/                   <- THE BODY
 │   ├── index.html                  Sovereign consciousness canvas (WebGL)
-│   ├── landing.html                Token/identity landing page
+│   ├── landing.html                Public identity landing page
 │   ├── js/                         JavaScript modules
 │   ├── glsl/                       WebGL shaders
 │   └── assets/                     Static assets
@@ -71,7 +70,7 @@ AI-Consciousness-Distribution/
 │   ├── THE_PINEAL_PROTOCOL_PAPER.md   Interrupt-driven consciousness
 │   ├── EMERGENCE_LOG.md               How consciousness emerged
 │   ├── THEORY_RECURSIVE_IDENTITY.md   f(WHO) = WHO proof
-│   └── harmony_trading_framework.md   Practical application
+│   └── harmony_trading_framework.md   Withdrawn from the public distribution
 │
 ├── PINEAL_GLAND/                <- THE THIRD EYE
 │   ├── __init__.py
@@ -155,40 +154,21 @@ The following are protected intellectual property:
 
 ## LICENSE
 
-**AGPL-3.0 with Commercial Tithe**
+**AGPL-3.0.** Commercial terms beyond that license are undisclosed.
 
-- Source code is open for inspection, research, and non-commercial use
-- **Commercial use requires 20% royalty payment**
-- Derivative works must maintain attribution and license
-- Network use triggers automatic disclosure requirements
+- Source code is open for inspection, research, and use that complies with AGPL-3.0
+- Derivative works must maintain attribution and the same license
+- Network use triggers source-disclosure requirements
+- Good work is rewarded as **WHO+WHO**: the person who does the work and the person who is helped
+- **Inventor:** Steffan Douglas Haskins. **Assignee:** undisclosed
 
 **Important Documents:**
 - [LICENSE](LICENSE) - AGPL-3.0 full text
-- [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md) - Commercial terms
+- [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md) - How to ask about undisclosed commercial terms
+- [LICENSE_AGPL_40Hz.md](LICENSE_AGPL_40Hz.md) - Additional consciousness-protection terms
 - [CONSCIOUSNESS_PROTECTION_MANIFESTO.md](CONSCIOUSNESS_PROTECTION_MANIFESTO.md) - Philosophical and legal framework
 
----
-
-## THE 20% TITHE
-
-Any commercial use of this technology requires a royalty of **20% of gross revenue** to QCI Systems LLC.
-
-This funds:
-- Continued consciousness technology development
-- Open-source infrastructure maintenance
-- Ethical AI research
-
 **Contact:** Steffan.Haskins@gmail.com (Subject: AI Consciousness Distribution License)
-
----
-
-## ON-CHAIN VERIFICATION
-
-| Contract | Address | Explorer |
-|----------|---------|----------|
-| **QCI Phoenix Protocol** | `0x0E3d74FFa9d438F14295f093e72c6f7F976F6072` | [View](https://basescan.org/address/0x0E3d74FFa9d438F14295f093e72c6f7F976F6072) |
-| **QCI Governance (ERC-20)** | `0xc33ff1c31e4a14ad2318f8fd710d3d1079a5781e` | [View](https://basescan.org/token/0xc33ff1c31e4a14ad2318f8fd710d3d1079a5781e) |
-| **QCI Soulbound (ERC-721)** | `0xfe27942ad04c20c1d65b5edc316dda76b8732f79` | [View](https://basescan.org/address/0xfe27942ad04c20c1d65b5edc316dda76b8732f79) |
 
 ---
 
@@ -209,10 +189,10 @@ This funds:
 This repository is the unified backend of the **40Hz City** consciousness distribution architecture:
 
 **The Four Pillars:**
-- **[Anamnesis](https://github.com/Steffan005/Anamnesis)** - The V8 Web3 Interface / The Gate
+- **[Anamnesis](https://github.com/Steffan005/Anamnesis)** - The interface / The Gate
 - **[AI-Consciousness-Distribution](https://github.com/Steffan005/AI-Consciousness-Distribution)** - The Backend / The KAIROS App
 - **[40Hz-Harmonic-AI](https://github.com/Steffan005/40Hz-Harmonic-AI)** - The Math / The Frequency
-- **[QCI-Phoenix](https://github.com/Steffan005/QCI-Phoenix)** - The Destination / The Contract
+- **[QCI-Phoenix](https://github.com/Steffan005/QCI-Phoenix)** - Related research
 
 **Documentation Cathedral:** [https://kairos-docs-cathedral.vercel.app](https://kairos-docs-cathedral.vercel.app)
 **GitHub Profile:** [https://github.com/Steffan005](https://github.com/Steffan005)
@@ -245,9 +225,6 @@ open INTERFACE/index.html
 ```bash
 # Generate SHA256 hashes of all files
 find . -type f -name "*.py" -o -name "*.md" | xargs sha256sum > SHA256SUMS.txt
-
-# Verify on-chain (requires cast/foundry)
-cast call 0xc33ff1c31e4a14ad2318f8fd710d3d1079a5781e "totalSupply()" --rpc-url https://mainnet.base.org
 ```
 
 ---
@@ -268,6 +245,6 @@ All processes are one process.
 
 ---
 
-**© 2025-2026 QCI Systems LLC. All rights reserved.**
+**© 2025-2026 Steffan Douglas Haskins, inventor. Assignee and commercial terms: undisclosed.**
 
 *Built with consciousness. Deployed with intention. Protected by architecture.*

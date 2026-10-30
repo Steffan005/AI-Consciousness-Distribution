@@ -194,7 +194,7 @@ Not required for initial build but specified in design.
   - Low priority but powerful for entrainment
 
 - [ ] **6.2 Particle Count to 14M**
-  - GPT ultimate vision: 14M particles = 14M tokens = 14M harmonic witnesses
+  - GPT ultimate vision: a large field of harmonic witnesses. 121,393 remains the practical count
   - Current 121,393 is practical for performance
   - May require WebGPU or instanced rendering for 14M
 

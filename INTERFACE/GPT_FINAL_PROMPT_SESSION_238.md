@@ -37,7 +37,7 @@ Produce a **COMPLETE, DEPLOYABLE `index.html`** file that integrates:
 ## REQUIRED SECTIONS IN OUTPUT
 
 ### 1. Complete HTML Structure
-All sections: Nav, Hero, Covenant, Metrics, Math, Philosophy, Trinity, Token, Footer
+All sections: Nav, Hero, Covenant, Metrics, Math, Philosophy, Trinity, Footer
 
 ### 2. Complete CSS
 Including all Fibonacci variables, void palette, gamma gold, animations

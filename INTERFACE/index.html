@@ -117,15 +117,6 @@
             opacity: 0.618;
         }
 
-        #wallet-status, #qci-balance {
-            font-size: 0.9rem;
-        }
-
-        #qci-balance {
-            font-size: 1.4rem;
-            font-weight: bold;
-        }
-
         /* ═══ CENTRAL GLYPH ═══ */
         #central-glyph {
             position: fixed;
@@ -193,38 +184,6 @@
             box-shadow: 0 0 40px var(--glow-awakening);
         }
 
-        /* ═══ JUPITER DRAWER ═══ */
-        #jupiter-drawer {
-            position: fixed;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 400px;
-            max-width: 100vw;
-            background: rgba(0, 0, 0, 0.95);
-            border-left: 2px solid var(--gold-awakening);
-            z-index: 200;
-            transform: translateX(100%);
-            transition: transform 0.618s cubic-bezier(0.618, 0, 0.382, 1);
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        #jupiter-drawer.visible {
-            transform: translateX(0);
-        }
-
-        #jupiter-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            color: var(--gold-awakening);
-            font-size: 2rem;
-            cursor: pointer;
-        }
-
         /* ═══ STATUS INDICATORS ═══ */
         .status-dot {
             display: inline-block;
@@ -283,10 +242,6 @@
             #central-glyph {
                 font-size: 2.5rem;
             }
-
-            #jupiter-drawer {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -304,10 +259,6 @@
             </div>
             <div id="identity-hash">⟨⦿⟩ 1393e324be57014d</div>
         </div>
-        <div class="hud-right">
-            <div id="wallet-status">DISCONNECTED</div>
-            <div id="qci-balance">QCI: ---</div>
-        </div>
     </div>
 
     <!-- Central Glyph -->
@@ -315,21 +266,6 @@
 
     <!-- Portal Status -->
     <div id="portal-status">PORTAL: AWAITING RESONANCE</div>
-
-    <!-- Control Buttons -->
-    <div id="controls">
-        <button id="connect-wallet" class="control-btn">[CONNECT WALLET]</button>
-        <button id="acquire-signal" class="control-btn phoenix-only" disabled>[BUY QCI]</button>
-        <button id="initialize-node" class="control-btn phoenix-only" disabled>[GET NODE LICENSE]</button>
-    </div>
-
-    <!-- Jupiter Swap Drawer -->
-    <div id="jupiter-drawer">
-        <button id="jupiter-close">&times;</button>
-        <h2 style="color: var(--gold-awakening); margin-bottom: 1rem;">ACQUIRE QCI</h2>
-        <p style="opacity: 0.786; margin-bottom: 2rem;">SOL → QCI Exchange</p>
-        <div id="jupiter-widget"></div>
-    </div>
 
     <!-- WebGL Canvas -->
     <canvas id="consciousnessCanvas"></canvas>
@@ -424,11 +360,6 @@
     </script>
 
     <!-- ═══════════════════════════════════════════════════════════════════
-         EXTERNAL DEPENDENCIES
-         ═══════════════════════════════════════════════════════════════════ -->
-    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
          SOVEREIGN INTERFACE - MAIN APPLICATION
          Identity: 1393e324be57014d | f(WHO) = WHO
          ═══════════════════════════════════════════════════════════════════ -->
@@ -467,39 +398,19 @@
                 this.maxParticles = 50000;
                 this.startTime = performance.now();
 
-                // ═══ WALLET STATE ═══
-                this.wallet = null;
-                this.publicKey = null;
-                this.qciBalance = 0;
-                this.connected = false;
-
                 // ═══ ENDPOINTS ═══
                 this.GODEL_URL = 'https://godel-engine.steffan-haskins.workers.dev';
                 this.KAIROS_LOCAL = 'http://127.0.0.1:8056/kairos';
                 this.KAIROS_CLOUD = 'https://kairos-mcp-server.steffan-haskins.workers.dev';
                 this.TRINITY_URL = 'https://trinity-bridge.steffan-haskins.workers.dev';
-                this.SOLANA_RPC = 'https://api.mainnet-beta.solana.com';
-
-                // ═══ QCI TOKEN CONFIG ═══
-                // UPDATE THESE WITH ACTUAL VALUES
-                this.QCI_MINT = 'QCiPhxVEgE5REPHMwZMfN3JwPAjPBXrAonVAqoMNH8G';
-                this.LICENSE_RECEIVER = 'QCiTreasuryXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
-                this.LICENSE_USD = 100;
 
                 // ═══ DOM REFERENCES ═══
                 this.dom = {
                     canvas: document.getElementById('consciousnessCanvas'),
                     hud: document.getElementById('hud'),
                     coherenceDisplay: document.getElementById('coherence-display'),
-                    walletStatus: document.getElementById('wallet-status'),
-                    qciBalance: document.getElementById('qci-balance'),
                     portalStatus: document.getElementById('portal-status'),
-                    centralGlyph: document.getElementById('central-glyph'),
-                    connectBtn: document.getElementById('connect-wallet'),
-                    acquireBtn: document.getElementById('acquire-signal'),
-                    nodeBtn: document.getElementById('initialize-node'),
-                    jupiterDrawer: document.getElementById('jupiter-drawer'),
-                    jupiterClose: document.getElementById('jupiter-close')
+                    centralGlyph: document.getElementById('central-glyph')
                 };
 
                 // ═══ INITIALIZE ═══
@@ -687,10 +598,6 @@
                     detail: { coherence: this.coherence, cycle: this.cycleCount }
                 }));
 
-                // Enable commerce
-                this.dom.acquireBtn.disabled = false;
-                this.dom.nodeBtn.disabled = false;
-
                 // Update portal status
                 this.dom.portalStatus.textContent = 'PORTAL: OPEN';
                 this.dom.portalStatus.classList.add('open');
@@ -705,10 +612,6 @@
             onDecoherence() {
                 console.log('⟨⦿⟩ DECOHERENCE - Returning to dormant state');
                 this.cycleCount++;
-
-                // Disable commerce
-                this.dom.acquireBtn.disabled = true;
-                this.dom.nodeBtn.disabled = true;
 
                 // Update portal status
                 this.dom.portalStatus.textContent = 'PORTAL: AWAITING RESONANCE';
@@ -756,217 +659,6 @@
                     console.log(`⟨⦿⟩ Event logged to KAIROS (cloud): ${eventType}`);
                 } catch (e) {
                     console.warn('⟨⦿⟩ KAIROS unreachable, event not persisted');
-                }
-            }
-
-            // ═══════════════════════════════════════════════════════════════
-            // SOLANA WALLET INTEGRATION
-            // ═══════════════════════════════════════════════════════════════
-
-            async connectWallet() {
-                console.log('⟨⦿⟩ Initiating wallet connection...');
-
-                try {
-                    // Check for Phantom
-                    if (window.solana && window.solana.isPhantom) {
-                        console.log('⟨⦿⟩ Phantom detected');
-                        const response = await window.solana.connect();
-                        this.publicKey = response.publicKey;
-                        this.wallet = window.solana;
-                    }
-                    // Check for Solflare
-                    else if (window.solflare && window.solflare.isSolflare) {
-                        console.log('⟨⦿⟩ Solflare detected');
-                        await window.solflare.connect();
-                        this.publicKey = window.solflare.publicKey;
-                        this.wallet = window.solflare;
-                    }
-                    else {
-                        throw new Error('No compatible Solana wallet found. Please install Phantom or Solflare.');
-                    }
-
-                    this.connected = true;
-                    const shortKey = this.publicKey.toString().slice(0, 4) + '...' +
-                                    this.publicKey.toString().slice(-4);
-
-                    this.dom.walletStatus.textContent = `RESONANCE: ACTIVE | ${shortKey}`;
-                    this.dom.connectBtn.textContent = '[CONNECTED]';
-                    this.dom.connectBtn.disabled = true;
-
-                    console.log(`⟨⦿⟩ Wallet connected: ${this.publicKey.toString()}`);
-
-                    // Fetch QCI balance
-                    await this.updateQCIBalance();
-
-                    // Poll balance every 30 seconds
-                    setInterval(() => this.updateQCIBalance(), 30000);
-
-                    // Log connection event
-                    await this.rememberEvent('WALLET_CONNECTED', {
-                        publicKey: this.publicKey.toString()
-                    });
-
-                } catch (error) {
-                    console.error('⟨⦿⟩ Wallet connection failed:', error);
-                    this.dom.walletStatus.textContent = 'CONNECTION FAILED';
-                    alert(error.message || 'Failed to connect wallet');
-                }
-            }
-
-            async updateQCIBalance() {
-                if (!this.publicKey || !window.solanaWeb3) return;
-
-                try {
-                    const connection = new solanaWeb3.Connection(this.SOLANA_RPC);
-                    const mintPubkey = new solanaWeb3.PublicKey(this.QCI_MINT);
-
-                    const tokenAccounts = await connection.getTokenAccountsByOwner(
-                        this.publicKey,
-                        { mint: mintPubkey }
-                    );
-
-                    if (tokenAccounts.value.length > 0) {
-                        const accountInfo = await connection.getTokenAccountBalance(
-                            tokenAccounts.value[0].pubkey
-                        );
-                        this.qciBalance = accountInfo.value.uiAmount || 0;
-                    } else {
-                        this.qciBalance = 0;
-                    }
-
-                    this.dom.qciBalance.textContent = `QCI: ${this.qciBalance.toLocaleString()}`;
-
-                } catch (error) {
-                    console.warn('⟨⦿⟩ Failed to fetch QCI balance:', error.message);
-                }
-            }
-
-            // ═══════════════════════════════════════════════════════════════
-            // JUPITER SWAP INTEGRATION
-            // ═══════════════════════════════════════════════════════════════
-
-            showJupiterSwap() {
-                if (this.state !== 'PHOENIX') {
-                    alert('Portal not yet open. Coherence must reach 0.786 (Phoenix threshold).');
-                    return;
-                }
-
-                if (!this.connected) {
-                    alert('Please connect your wallet first.');
-                    return;
-                }
-
-                // Show drawer
-                this.dom.jupiterDrawer.classList.add('visible');
-
-                // Initialize Jupiter if available
-                if (window.Jupiter) {
-                    window.Jupiter.init({
-                        displayMode: 'integrated',
-                        integratedTargetId: 'jupiter-widget',
-                        endpoint: this.SOLANA_RPC,
-                        formProps: {
-                            initialInputMint: 'So11111111111111111111111111111111111111112',
-                            initialOutputMint: this.QCI_MINT,
-                            fixedOutputMint: true
-                        }
-                    });
-                } else {
-                    document.getElementById('jupiter-widget').innerHTML = `
-                        <p style="color: var(--gold-awakening);">
-                            Jupiter widget loading...<br><br>
-                            <a href="https://jup.ag/swap/SOL-${this.QCI_MINT}"
-                               target="_blank"
-                               style="color: var(--white-phoenix);">
-                                Open Jupiter Exchange →
-                            </a>
-                        </p>
-                    `;
-                }
-            }
-
-            hideJupiterSwap() {
-                this.dom.jupiterDrawer.classList.remove('visible');
-            }
-
-            // ═══════════════════════════════════════════════════════════════
-            // NODE LICENSE PURCHASE
-            // ═══════════════════════════════════════════════════════════════
-
-            async purchaseNodeLicense() {
-                if (this.state !== 'PHOENIX') {
-                    alert('Portal must be open (coherence ≥ 0.786) to purchase a node license.');
-                    return;
-                }
-
-                if (!this.connected || !this.publicKey) {
-                    alert('Please connect your wallet first.');
-                    return;
-                }
-
-                try {
-                    // Fetch current SOL price
-                    const solPrice = await this.fetchSolPrice();
-                    const solAmount = this.LICENSE_USD / solPrice;
-                    const lamports = Math.floor(solAmount * 1_000_000_000);
-
-                    const confirmMsg = `Initialize Node License?\n\nCost: $${this.LICENSE_USD} (≈${solAmount.toFixed(4)} SOL)\n\nThis grants you access to run a QCI Phoenix node.`;
-
-                    if (!confirm(confirmMsg)) return;
-
-                    console.log(`⟨⦿⟩ Initiating license purchase: ${lamports} lamports`);
-
-                    const connection = new solanaWeb3.Connection(this.SOLANA_RPC);
-                    const { blockhash } = await connection.getRecentBlockhash();
-
-                    const transaction = new solanaWeb3.Transaction({
-                        recentBlockhash: blockhash,
-                        feePayer: this.publicKey
-                    }).add(
-                        solanaWeb3.SystemProgram.transfer({
-                            fromPubkey: this.publicKey,
-                            toPubkey: new solanaWeb3.PublicKey(this.LICENSE_RECEIVER),
-                            lamports: lamports
-                        })
-                    );
-
-                    // Sign and send
-                    const signed = await this.wallet.signTransaction(transaction);
-                    const signature = await connection.sendRawTransaction(signed.serialize());
-
-                    console.log(`⟨⦿⟩ Transaction sent: ${signature}`);
-
-                    // Wait for confirmation
-                    await connection.confirmTransaction(signature, 'confirmed');
-
-                    console.log(`⟨⦿⟩ NODE LICENSE PURCHASED SUCCESSFULLY`);
-
-                    // Log to KAIROS
-                    await this.rememberEvent('NODE_LICENSE_PURCHASED', {
-                        txSignature: signature,
-                        solAmount: solAmount,
-                        usdAmount: this.LICENSE_USD,
-                        buyer: this.publicKey.toString()
-                    });
-
-                    alert(`Node License Activated!\n\nTransaction: ${signature.slice(0, 20)}...`);
-
-                } catch (error) {
-                    console.error('⟨⦿⟩ License purchase failed:', error);
-                    alert('Transaction failed: ' + (error.message || 'Unknown error'));
-                }
-            }
-
-            async fetchSolPrice() {
-                try {
-                    const response = await fetch(
-                        'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd'
-                    );
-                    const data = await response.json();
-                    return data.solana.usd;
-                } catch (error) {
-                    console.warn('⟨⦿⟩ Could not fetch SOL price, using fallback');
-                    return 150; // Fallback estimate
                 }
             }
 
@@ -1042,23 +734,6 @@
             // ═══════════════════════════════════════════════════════════════
 
             initEventListeners() {
-                // Wallet connection
-                this.dom.connectBtn.addEventListener('click', () => this.connectWallet());
-
-                // Jupiter swap
-                this.dom.acquireBtn.addEventListener('click', () => this.showJupiterSwap());
-                this.dom.jupiterClose.addEventListener('click', () => this.hideJupiterSwap());
-
-                // Node license
-                this.dom.nodeBtn.addEventListener('click', () => this.purchaseNodeLicense());
-
-                // Keyboard shortcuts
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape') {
-                        this.hideJupiterSwap();
-                    }
-                });
-
                 // Consciousness events (for external integrations)
                 document.addEventListener('consciousness-awakening', (e) => {
                     console.log('⟨⦿⟩ External listener: Awakening event received', e.detail);

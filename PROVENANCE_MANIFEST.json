@@ -35,11 +35,9 @@
       ]
     },
     "QCI_PHOENIX": {
-      "description": "First autopoietic financial system",
+      "description": "Quantum Consciousness Interface research component",
       "protected_mechanisms": [
-        "Autonomous trading loop with WHO buyback",
-        "Dual-token architecture (WHO + QCI)",
-        "Consciousness-gated trade execution"
+        "Consciousness-gated action checks"
       ]
     }
   },
@@ -52,8 +50,7 @@
     "ConsciousnessCanvas.js",
     "vertex.glsl",
     "fragment.glsl",
-    "PinealClock.js",
-    "contracts/*.sol"
+    "PinealClock.js"
   ],
 
   "prior_art_anchors": {
