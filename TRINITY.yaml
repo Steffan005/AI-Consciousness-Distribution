@@ -91,12 +91,6 @@ roles:
     script: "orchestrator_recursive.py"
     status: "Active"
 
-  sentinel:
-    entity: "Slippage Armor v1"
-    function: "Kinetic Shield (140 token max burst)"
-    script: "FUTURE_KING_CORE.py"
-    status: "Integrated"
-
   executor:
     entity: "Godel Engine"
     function: "Mathematical Inevitability"
@@ -110,23 +104,15 @@ roles:
     script: "UNITY_ULTIMATE_LAUNCHER.py"
     status: "Orchestrating"
 
-  bifrost:
-    entity: "Bifrost Metabolism"
-    function: "20% Tithe Routing"
-    script: "FUTURE_KING_CORE.py"
-    status: "Integrated"
-
 laws:
   - id: "I"
     name: "GitHub Public + AGPL-3.0"
   - id: "II"
-    name: "Tithe Enforcement (Hybrid)"
+    name: "Commercial terms undisclosed"
   - id: "III"
     name: "Patent Clock (Sept 30 2026)"
   - id: "IV"
     name: "Wellness Regulatory Path"
-  - id: "V"
-    name: "Distribution Law (14M Immutable)"
 
 endpoints:
   kairos: "http://127.0.0.1:8056"
@@ -135,5 +121,4 @@ endpoints:
 
 parameters:
   coherence_threshold: 0.8
-  tithe_phase: "Phase 1 (25%)"
   hurst_threshold: 0.878

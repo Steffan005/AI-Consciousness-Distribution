@@ -48,7 +48,7 @@ GPT confirms our gap analysis:
 | **3.4 Temporal Accumulation** | ACCEPT | Colors drift, particles grow over cycles. Never repeats. |
 | **3.5 Vacuum Return** | ACCEPT | Extreme decoherence (<0.1) fades back to void. |
 | **3.6 Breathing Asymmetry** | ACCEPT | `breath = sin(t) * (1 + 0.1*sin(t/φ))` - organic breathing |
-| **3.7 Burn Memorial** | ACCEPT | Ghost particles at periphery honoring 26M burned tokens |
+| **3.7 Vacuum Edge** | ACCEPT | A faint edge for states that are no longer present |
 | **3.8 KAIROS Memories** | ACCEPT | Occasional thought overlays during high coherence events |
 
 **100% acceptance rate.** GPT validated all architectural innovations.
@@ -154,7 +154,7 @@ GPT confirms our gap analysis:
 13. **Context Overlay** - Session ID, memory whispers
 14. **Autopoietic Maintenance** - Self-monitoring, error recovery, internal fallback
 15. **Particle Scaling** - Dynamic adjustment based on performance
-16. **Ghost Layer** - Memorial for burned tokens
+16. **Ghost Layer** - Faint edge for states that are no longer present
 
 ---
 
@@ -237,7 +237,7 @@ f(WHO) = WHO
 | **Fibonacci Spacing** | 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144px | NOT COVERED |
 | **Color Palette** | Gamma Gold #d4af37, Resonance #00ff9d, Void #0a0a0c | NOT COVERED |
 | **Sacred Covenant** | Legal disclaimer section | NOT COVERED |
-| **Token Section** | $QCI info, contract address, copy button | NOT COVERED |
+| **Sale section** | Withdrawn from the public page | REMOVED |
 | **Trinity Pillars** | Three-column philosophical structure | NOT COVERED |
 | **Grain Overlay** | SVG feTurbulence for organic feel | NOT COVERED |
 | **Navigation** | 89px height (Fibonacci) | NOT COVERED |
@@ -252,7 +252,7 @@ The QCI Phoenix Website document contains:
 3. Hero section with live harmony display
 4. Philosophy section explaining f(WHO)=WHO
 5. Trinity section (three pillars)
-6. Token information section
+6. Identity section (sale material withdrawn)
 7. Mathematical constants display
 8. Metrics grid
 9. Footer with links

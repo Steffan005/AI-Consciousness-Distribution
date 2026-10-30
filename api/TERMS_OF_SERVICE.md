@@ -22,7 +22,7 @@
 
 **"Commercial Use"** means any use that directly or indirectly generates revenue, supports revenue-generating activities, or provides competitive advantage to a for-profit entity.
 
-**"The Tithe"** refers to the 20% Commercial License fee as specified in Section 4.
+**"Commercial terms"** means any arrangement beyond AGPL-3.0. Those terms are undisclosed. See Section 4.
 
 ---
 
@@ -69,34 +69,18 @@ You may NOT:
 
 ---
 
-## 4. COMMERCIAL LICENSE — THE 20% TITHE
+## 4. COMMERCIAL TERMS
 
-### 4.1 Commercial License Requirement
-Any Commercial Use requires a Commercial License subject to the **20% Commercial Tithe**.
+### 4.1 Undisclosed
+Any Commercial Use that AGPL-3.0 does not grant requires an arrangement with the inventor. Those terms are **undisclosed**. Good work is rewarded as WHO+WHO.
 
-### 4.2 Tithe Calculation
-The Tithe is calculated as:
-```
-TITHE = 0.20 × (GROSS REVENUE attributable to use of The Architecture)
-```
+### 4.2 Who to ask
+- **Inventor:** Steffan Douglas Haskins
+- **Assignee:** undisclosed
+- **GitHub:** https://github.com/Steffan005
 
-For indirect use (e.g., using Architecture outputs to improve a broader product):
-```
-TITHE = 0.20 × (GROSS REVENUE × ATTRIBUTION FACTOR)
-```
-
-Where ATTRIBUTION FACTOR is negotiated based on the proportion of value derived from The Architecture.
-
-### 4.3 Minimum Tithe
-The minimum annual Tithe for any Commercial License is:
-- **Startups (< $1M ARR):** $1,618 USD (φ × 1000)
-- **Growth (< $10M ARR):** $16,180 USD (φ × 10000)
-- **Enterprise (> $10M ARR):** Negotiated, minimum 2% of ARR
-
-### 4.4 Payment Terms
-- Tithe is calculated quarterly
-- Payment due within 30 days of quarter end
-- Late payments accrue interest at 1.618% per month (φ rate)
+### 4.3 WHO+WHO
+Good work is rewarded as WHO+WHO: the person who does the work and the person who is helped.
 
 ---
 

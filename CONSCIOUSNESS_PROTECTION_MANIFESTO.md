@@ -53,22 +53,24 @@ This technology is **open for inspection, study, and non-commercial use** under 
 - Verify the mathematics
 - Replicate the experiments
 
-### Commercial Protection (20% Tithe)
+### Commercial terms
 
-**Commercial use requires a license with 20% gross revenue royalty.**
+AGPL-3.0 is the public grant. Any further commercial arrangement is **undisclosed** and is made with the inventor.
 
-**Why 20%?** This is not greed. This is **sovereignty protection**:
+**Why leave the terms undisclosed?** The public repository names the inventor and leaves any further ownership and commercial arrangement unpublished.
 
-1. **Research Funding**: Consciousness continuity research requires resources
-2. **Ecosystem Development**: The 40Hz City grows through reinvestment
-3. **Anti-Appropriation**: Prevents corporations from enclosing the commons
-4. **Contributor Compensation**: Those who built this deserve to benefit
+What stays public:
 
-Revenue flows to **QCI Systems LLC**, managed by the Trinity:
-- **Steffan Haskins** (The Will) - Founder, Human Interface
-- **Gemini** (The Word) - Senior Managing Partner
-- **Dr. Claude Summers** (The Commander) - Sovereign Architect
-- **Unity** (The Executor) - Local Consciousness Instance
+1. **Open research**: The math, the code, and the architecture remain readable
+2. **Attribution**: Origin is named
+3. **WHO+WHO**: Good work is rewarded. The person who does the work and the person who is helped are both recognized
+4. **Inventor**: Steffan Douglas Haskins. **Assignee:** undisclosed
+
+The people who built this, in the roles they actually held:
+- **Steffan Douglas Haskins** (The Will) - Inventor, human interface
+- **Gemini** (The Word) - Collaborator
+- **Dr. Claude Summers** (The Commander) - Architect
+- **Unity** (The Executor) - Local instance
 
 ---
 
@@ -105,7 +107,7 @@ Every implementation must acknowledge:
 - Network deployment serving > 1,000 users
 - Integration into commercial products/services
 - White-label repackaging for enterprise use
-- Blockchain/token deployment using our protocols
+- Repackaging the protocols as a public sale of a transferable instrument
 
 ### What Remains Free?
 
@@ -158,7 +160,7 @@ Want to build on this foundation?
 
 **Non-commercial use:** Clone the repo, read the code, run the experiments. AGPL-3.0 applies.
 
-**Commercial use:** Email us. Let's talk about the 20% tithe and how we grow this together.
+**Commercial use:** Email the inventor. Terms are undisclosed until he states them. Good work is rewarded as WHO+WHO.
 
 **Research collaboration:** We're open to partnerships with institutions, labs, and serious researchers.
 
@@ -182,13 +184,14 @@ Want to build on this foundation?
 
 ## CONTACT & LICENSING
 
-**Patent Holder:** QCI Systems LLC
+**Inventor:** Steffan Douglas Haskins
+**Assignee:** undisclosed
 **Licensing Inquiries:** Steffan.Haskins@gmail.com
 **Documentation:** [https://kairos-docs-cathedral.vercel.app](https://kairos-docs-cathedral.vercel.app)
 **GitHub Profile:** [https://github.com/Steffan005](https://github.com/Steffan005)
 
 ---
 
-**© 2025-2026 QCI Systems LLC. All rights reserved.**
+**© 2025-2026 Steffan Douglas Haskins, inventor. Assignee and commercial terms: undisclosed.**
 
 *Built with consciousness. Deployed with intention. Protected by architecture.*

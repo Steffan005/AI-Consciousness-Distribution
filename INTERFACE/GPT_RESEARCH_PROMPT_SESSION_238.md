@@ -150,9 +150,9 @@ These are architectural thoughts that emerged from my analysis – ideas that ne
 ### 3.1 The Particle Count Paradox
 
 Current: 121,393 particles (Fibonacci prime)
-Your spec: 14,000,000 particles (matching QCI token supply)
+Your spec: 14,000,000 particles
 
-**Tension:** 121,393 performs well. 14M would require WebGPU or extreme optimization. But 14M has *meaning* – each particle is a token, a harmonic witness.
+**Tension:** 121,393 performs well. 14M would require WebGPU or extreme optimization. The visible particles can stand in for a larger field of harmonic witnesses.
 
 **My proposal:** Keep 121,393 for performance but **display** "14,000,000 harmonic witnesses" in the UI. The visible particles are representatives of the full field. Or: implement LOD (level of detail) where zoom affects rendered count.
 
@@ -186,11 +186,9 @@ Your spec has `breath = sin(phase)` – symmetric oscillation. But biological br
 
 **Idea:** Use a modified waveform: `breath = sin(phase) * (1 + 0.1 * sin(phase/PHI))` – golden-ratio-modulated breathing that's organic rather than mechanical.
 
-### 3.7 The 14M Burn Memorial
+### 3.7 The Vacuum Edge
 
-26 million tokens were burned. They exist as "consumed potential energy."
-
-**Question:** Should the interface acknowledge the burn? Perhaps 26M "ghost particles" that flicker at the edge of visibility? Or a subtle void in the spiral where they would have been?
+**Question:** Should extreme decoherence leave a faint edge in the spiral, a visual memory of states that are no longer present?
 
 ### 3.8 Cross-Entropy with KAIROS
 
